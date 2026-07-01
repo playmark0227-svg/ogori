@@ -1,9 +1,10 @@
 // オゴリ API 統合テスト（node:test）。DBはメモリ上で完結、外部依存なし。
-import { test, before, after, describe } from 'node:test';
+import { test, before, beforeEach, after, describe } from 'node:test';
 import assert from 'node:assert/strict';
 import { createServer } from 'node:http';
 import { initDb } from '../server/db.js';
 import { handleRequest } from '../server/app.js';
+import { _reset as resetRateLimit } from '../server/ratelimit.js';
 
 let server;
 let base;
@@ -17,6 +18,9 @@ before(async () => {
 });
 
 after(() => new Promise((resolve) => server.close(resolve)));
+
+// レート制限はプロセス共有の状態なので、テスト間の相互汚染を防ぐためリセット。
+beforeEach(() => resetRateLimit());
 
 // Cookie を保持する簡易 fetch ラッパ。
 function client() {
@@ -134,7 +138,7 @@ describe('社員管理と配送', () => {
     const r = await c('POST', '/api/employees', { name: '山田太郎', department: '営業' });
     assert.equal(r.status, 201);
     assert.match(r.data.credentials.employeeCode, /^EMP-[0-9A-Z]{4}$/);
-    assert.match(r.data.credentials.pin, /^\d{6}$/);
+    assert.match(r.data.credentials.pin, /^\d{8}$/);
 
     const del = await c('GET', '/api/deliveries');
     assert.equal(del.status, 200);
@@ -246,6 +250,22 @@ describe('社員ポータル', () => {
       companyId: creds.companyId, employeeCode: creds.employeeCode, pin: '999888',
     });
     assert.equal(relog.status, 200);
+  });
+
+  test('PINの総当たりはロックアウトされる（8回失敗で9回目は429）', async () => {
+    const { creds } = await setup('bruteforce@test.jp');
+    const c = client();
+    for (let i = 0; i < 8; i++) {
+      const r = await c('POST', '/api/employee/login', {
+        companyId: creds.companyId, employeeCode: creds.employeeCode, pin: '00000000',
+      });
+      assert.equal(r.status, 401, `試行${i + 1}回目は401のはず`);
+    }
+    // 9回目はロックアウト。正しいPINでも弾かれる。
+    const locked = await c('POST', '/api/employee/login', {
+      companyId: creds.companyId, employeeCode: creds.employeeCode, pin: creds.pin,
+    });
+    assert.equal(locked.status, 429);
   });
 
   test('停止中の社員はログインできない', async () => {

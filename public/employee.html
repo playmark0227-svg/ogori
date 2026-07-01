@@ -48,14 +48,14 @@
     <!-- 今月のお届け -->
     <div id="thisMonthCard" class="card section-card" style="background:linear-gradient(120deg,var(--gold-050),var(--green-050))"></div>
 
-    <div class="grid" style="grid-template-columns:1fr 1fr;gap:24px" id="portalGrid">
+    <div class="portal-grid" id="portalGrid">
       <!-- お届け先住所 -->
       <div class="card section-card">
         <div class="section-card__head"><h2>お届け先住所</h2><span id="addrStatus"></span></div>
         <form id="addrForm" class="stack">
           <div id="addrAlert"></div>
-          <div class="field"><label>郵便番号</label><input name="postalCode" maxlength="16" placeholder="150-0001" /></div>
-          <div class="field"><label>住所</label><input name="address" maxlength="300" placeholder="東京都渋谷区…" /></div>
+          <div class="field"><label>郵便番号 *</label><input name="postalCode" maxlength="16" placeholder="150-0001" required /></div>
+          <div class="field"><label>住所 *</label><input name="address" maxlength="300" placeholder="東京都渋谷区…" required /></div>
           <button class="btn btn--primary" type="submit">お届け先を保存</button>
           <p class="hint">ご家族のご住所でも登録いただけます。</p>
         </form>

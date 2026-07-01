@@ -70,7 +70,7 @@ export function monthLabel(month) { return `${month}月`; }
 export function productBadge(type, name) {
   const cls = type === 'rice' ? 'badge--rice' : 'badge--veg';
   const emoji = type === 'rice' ? '🍚' : '🥬';
-  return `<span class="badge ${cls}">${emoji} ${name}</span>`;
+  return `<span class="badge ${cls}">${emoji} ${escapeHtml(name)}</span>`;
 }
 export function statusBadge(status) {
   const map = {

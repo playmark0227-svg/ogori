@@ -2,7 +2,7 @@
 import { createReadStream } from 'node:fs';
 import { stat } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
-import { dirname, join, normalize, extname } from 'node:path';
+import { dirname, join, normalize, extname, sep } from 'node:path';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PUBLIC_DIR = join(__dirname, '..', 'public');
@@ -28,13 +28,13 @@ const PAGE_ALIASES = {
   '/employee': 'employee.html',
 };
 
-export async function serveStatic(req, res, pathname) {
+export async function serveStatic(req, res, pathname, { statusCode = 200 } = {}) {
   let rel = PAGE_ALIASES[pathname] ?? pathname.replace(/^\/+/, '');
   if (rel === '' ) rel = 'index.html';
 
-  // 正規化してPUBLIC_DIR外への脱出を防ぐ。
+  // 正規化してPUBLIC_DIR外への脱出を防ぐ（区切り文字を付けて prefix 一致の抜けを防止）。
   const target = normalize(join(PUBLIC_DIR, rel));
-  if (!target.startsWith(PUBLIC_DIR)) {
+  if (target !== PUBLIC_DIR && !target.startsWith(PUBLIC_DIR + sep)) {
     res.writeHead(403).end('Forbidden');
     return true;
   }
@@ -48,8 +48,8 @@ export async function serveStatic(req, res, pathname) {
   if (info.isDirectory()) return false;
 
   const type = MIME[extname(target).toLowerCase()] || 'application/octet-stream';
-  const isImmutable = target.includes(`${'/'}assets${'/'}`);
-  res.writeHead(200, {
+  const isImmutable = target.includes(`${sep}assets${sep}`);
+  res.writeHead(statusCode, {
     'Content-Type': type,
     'Content-Length': info.size,
     'Cache-Control': isImmutable ? 'public, max-age=86400' : 'no-cache',
@@ -58,6 +58,16 @@ export async function serveStatic(req, res, pathname) {
     res.end();
     return true;
   }
-  createReadStream(target).pipe(res);
+  // ストリームエラー（配信中のI/O障害）でプロセスが落ちないよう必ず捕捉する。
+  const stream = createReadStream(target);
+  stream.on('error', () => {
+    if (!res.headersSent) {
+      res.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8' });
+      res.end('サーバーエラーが発生しました。');
+    } else {
+      res.destroy();
+    }
+  });
+  stream.pipe(res);
   return true;
 }

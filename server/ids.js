@@ -36,7 +36,7 @@ export function generateEmployeeCode(exists) {
   throw new Error('社員コードの生成に失敗しました。');
 }
 
-/** 初期ログインPIN（6桁）。 */
+/** 初期ログインPIN（8桁）。総当たり対策の一環で桁数を確保。 */
 export function generatePin() {
-  return String(randomInt(0, 1_000_000)).padStart(6, '0');
+  return String(randomInt(0, 100_000_000)).padStart(8, '0');
 }

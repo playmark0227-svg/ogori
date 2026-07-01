@@ -64,6 +64,7 @@
 .creds__row b { font-size: 18px; letter-spacing: .05em; }
 
 /* 社員ポータル */
+.portal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
 .portal-head { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
 .portal-head img { width: 60px; }
 .timeline { position: relative; padding-left: 28px; margin-top: 8px; }
@@ -87,6 +88,7 @@
   .stat-grid { grid-template-columns: repeat(2, 1fr); }
   .month-strip { grid-template-columns: repeat(3, 1fr); }
   .idbanner { flex-direction: column; align-items: flex-start; }
+  .portal-grid { grid-template-columns: 1fr; }
 }
 @media (max-width: 480px) {
   .stat-grid { grid-template-columns: 1fr; }

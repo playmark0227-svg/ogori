@@ -1,7 +1,8 @@
 // 企業（管理者）向けルート: 登録・ログイン・会社情報・統計。
 import { getDb } from '../db.js';
-import { HttpError, sendJson, readJsonBody, setCookie, clearCookie } from '../http.js';
+import { HttpError, sendJson, readJsonBody, setCookie, clearCookie, clientIp } from '../http.js';
 import { hashSecret, verifySecret, createSession, destroySession } from '../auth.js';
+import { checkLogin, recordFailure, recordSuccess } from '../ratelimit.js';
 import { requireAdmin, ADMIN_COOKIE } from '../middleware.js';
 import { generateCompanyId } from '../ids.js';
 import { companyIdExists, activeEmployeeCount, totalEmployeeCount } from '../repo.js';
@@ -45,6 +46,13 @@ export async function login(req, res) {
   const adminEmail = v.email(body.adminEmail);
   const pw = v.str(body.password, 'パスワード', { trim: false });
 
+  // 総当たり対策: アカウント単位・IP単位でロックアウト。
+  const keys = [`admin:${adminEmail}`, `ip:${clientIp(req)}`];
+  const lock = checkLogin(keys);
+  if (lock.locked) {
+    throw new HttpError(429, `試行回数が上限に達しました。約${Math.ceil(lock.retryAfterSec / 60)}分後に再度お試しください。`, { retryAfter: lock.retryAfterSec });
+  }
+
   const db = getDb();
   const company = db.prepare('SELECT * FROM companies WHERE admin_email = ?').get(adminEmail);
   // タイミング差を避けるためダミー検証も行う。
@@ -52,8 +60,10 @@ export async function login(req, res) {
     ? verifySecret(pw, company.password_hash)
     : verifySecret(pw, 'aa:bb');
   if (!company || !ok) {
+    recordFailure(keys);
     throw new HttpError(401, 'メールアドレスまたはパスワードが正しくありません。');
   }
+  recordSuccess(keys);
 
   const token = createSession('admin', company.id);
   setCookie(res, ADMIN_COOKIE, token, cookieOpts);

@@ -1,7 +1,8 @@
 // 社員向けポータル: ログイン・自分の情報・お届け先住所の更新・配送履歴。
 import { getDb } from '../db.js';
-import { HttpError, sendJson, readJsonBody, setCookie, clearCookie } from '../http.js';
+import { HttpError, sendJson, readJsonBody, setCookie, clearCookie, clientIp } from '../http.js';
 import { verifySecret, hashSecret, createSession, destroySession } from '../auth.js';
+import { checkLogin, recordFailure, recordSuccess } from '../ratelimit.js';
 import { requireEmployee, EMP_COOKIE } from '../middleware.js';
 import { listEmployeeDeliveries } from '../repo.js';
 import { publicEmployee, publicDelivery, publicCompany } from '../serialize.js';
@@ -18,6 +19,13 @@ export async function login(req, res) {
   const employeeCode = v.str(body.employeeCode, '社員コード', { max: 40 }).toUpperCase();
   const pinValue = v.str(body.pin, 'PIN', { trim: true, max: 12 });
 
+  // 総当たり対策: アカウント単位・IP単位でロックアウト。
+  const keys = [`emp:${companyId}:${employeeCode}`, `ip:${clientIp(req)}`];
+  const lock = checkLogin(keys);
+  if (lock.locked) {
+    throw new HttpError(429, `試行回数が上限に達しました。約${Math.ceil(lock.retryAfterSec / 60)}分後に再度お試しください。`, { retryAfter: lock.retryAfterSec });
+  }
+
   const db = getDb();
   const company = db.prepare('SELECT * FROM companies WHERE company_id = ?').get(companyId);
   const emp = company
@@ -28,8 +36,10 @@ export async function login(req, res) {
 
   const ok = emp ? verifySecret(pinValue, emp.pin_hash) : verifySecret(pinValue, 'aa:bb');
   if (!company || !emp || !ok) {
+    recordFailure(keys);
     throw new HttpError(401, '会社ID・社員コード・PINのいずれかが正しくありません。');
   }
+  recordSuccess(keys);
   if (emp.status !== 'active') {
     throw new HttpError(403, 'このアカウントは現在利用できません。管理者にお問い合わせください。');
   }

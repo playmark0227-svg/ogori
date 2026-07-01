@@ -24,7 +24,7 @@ export const PRICING = {
 // 配送ルール — PDFより「偶数月はお米／奇数月は野菜」
 export const PRODUCTS = {
   rice: { type: 'rice', name: 'お米 5kg', emoji: '🍚', icon: '/assets/rice.png' },
-  vegetable: { type: 'vegetable', name: '旬の野菜セット', emoji: '🥬', icon: '/assets/banana.png' },
+  vegetable: { type: 'vegetable', name: '旬の野菜セット', emoji: '🥬', icon: '/assets/vegetable.svg' },
 };
 
 // ゆくゆく提供予定（PDF: オムツなど子育て世代向け）

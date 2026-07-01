@@ -67,15 +67,36 @@ export function parseCookies(req) {
   return out;
 }
 
-export function setCookie(res, name, value, { maxAge, httpOnly = true, sameSite = 'Lax', path = '/' } = {}) {
+// 本番(HTTPS)では Secure Cookie を付与。OGORI_SECURE_COOKIES=1 または NODE_ENV=production で有効。
+const SECURE_COOKIES =
+  process.env.OGORI_SECURE_COOKIES === '1' || process.env.NODE_ENV === 'production';
+
+export function setCookie(
+  res,
+  name,
+  value,
+  { maxAge, httpOnly = true, sameSite = 'Lax', path = '/', secure = SECURE_COOKIES } = {}
+) {
   let cookie = `${name}=${encodeURIComponent(value)}; Path=${path}; SameSite=${sameSite}`;
   if (httpOnly) cookie += '; HttpOnly';
+  if (secure) cookie += '; Secure';
   if (typeof maxAge === 'number') cookie += `; Max-Age=${maxAge}`;
   appendHeader(res, 'Set-Cookie', cookie);
 }
 
 export function clearCookie(res, name, { path = '/' } = {}) {
-  appendHeader(res, 'Set-Cookie', `${name}=; Path=${path}; Max-Age=0; HttpOnly; SameSite=Lax`);
+  let cookie = `${name}=; Path=${path}; Max-Age=0; HttpOnly; SameSite=Lax`;
+  if (SECURE_COOKIES) cookie += '; Secure';
+  appendHeader(res, 'Set-Cookie', cookie);
+}
+
+/** クライアントIPを取得（信頼できるプロキシ配下なら X-Forwarded-For の先頭を優先）。 */
+export function clientIp(req) {
+  const xff = req.headers['x-forwarded-for'];
+  if (xff && process.env.OGORI_TRUST_PROXY === '1') {
+    return String(xff).split(',')[0].trim();
+  }
+  return req.socket?.remoteAddress || 'unknown';
 }
 
 function appendHeader(res, name, value) {

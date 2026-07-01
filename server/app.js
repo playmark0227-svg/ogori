@@ -74,8 +74,8 @@ export async function handleRequest(req, res) {
     } catch (err) {
       return sendError(res, 500, 'サーバーエラーが発生しました。');
     }
-    // SPA的なフォールバックはしない。未知パスは404ページ。
-    return serveStatic(req, res, '/404.html').then((ok) => {
+    // SPA的なフォールバックはしない。未知パスは404ページ（HTTP 404）。
+    return serveStatic(req, res, '/404.html', { statusCode: 404 }).then((ok) => {
       if (!ok) sendError(res, 404, 'ページが見つかりません。');
     });
   }
