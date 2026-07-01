@@ -104,10 +104,34 @@ export function statusBadge(status) {
   return `<span class="badge ${cls}">${label}</span>`;
 }
 
-// ---- 共通ナビ描画 ----
-export function renderNav(active) {
+// ---- HP（サービス紹介サイト）ヘッダー ----
+export function renderSiteNav() {
   const links = [
-    { href: 'index.html', label: 'ホーム', key: 'home' },
+    { href: '#features', label: '特長' },
+    { href: '#effect', label: '導入効果' },
+    { href: '#plan', label: '料金' },
+  ];
+  return `
+  <header class="site-nav" id="siteNav">
+    <div class="wrap site-nav__inner">
+      <a class="brand" href="index.html">
+        <span class="brand__logo">🦍</span>
+        <span class="brand__name">オゴリ <span class="brand__en">OGORI</span></span>
+      </a>
+      <nav class="site-nav__links">
+        ${links.map((l) => `<a href="${l.href}">${l.label}</a>`).join('')}
+      </nav>
+      <div class="site-nav__cta">
+        <a class="btn btn--ghost btn--sm" href="app/employee.html">社員ログイン</a>
+        <a class="btn btn--gold btn--sm" href="app/">アプリを開く</a>
+      </div>
+    </div>
+  </header>`;
+}
+
+// ---- アプリ（管理・社員）ヘッダー ----
+export function renderAppNav(active) {
+  const links = [
     { href: 'admin.html', label: '企業管理', key: 'admin' },
     { href: 'employee.html', label: '社員ポータル', key: 'employee' },
   ];
@@ -116,11 +140,12 @@ export function renderNav(active) {
     <div class="wrap nav__inner">
       <a class="brand" href="index.html">
         <span class="brand__logo">🦍</span>
-        <span>オゴリ <span class="brand__en">OGORI</span></span>
+        <span class="brand__name">オゴリ <span class="brand__en">APP</span></span>
       </a>
       <div class="nav__spacer"></div>
       <nav class="nav__links">
         ${links.map((l) => `<a class="btn btn--sm ${l.key === active ? 'btn--primary' : 'btn--ghost'}" href="${l.href}">${l.label}</a>`).join('')}
+        <a class="btn btn--sm btn--ghost nav__home" href="../index.html">サービス紹介 ↗</a>
       </nav>
     </div>
   </header>`;

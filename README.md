@@ -71,13 +71,14 @@ npm run seed
 npm test
 ```
 
-起動後のURL:
+起動後のURL（サービス紹介HPと、アプリ画面を別URLに分離しています）:
 
 | 画面 | URL |
 | --- | --- |
-| ランディングページ | http://localhost:3000/ |
-| 企業管理コンソール | http://localhost:3000/admin |
-| 社員ポータル | http://localhost:3000/employee |
+| サービス紹介（HP） | http://localhost:3000/ |
+| アプリ入口（ランチャー） | http://localhost:3000/app/ |
+| 企業管理コンソール | http://localhost:3000/app/admin.html （`/admin` でも可） |
+| 社員ポータル | http://localhost:3000/app/employee.html （`/employee` でも可） |
 
 ### デモアカウント（`OGORI_SEED=1` で起動時）
 
@@ -138,8 +139,10 @@ ogori/
 │   ├── seed.js           # デモデータ
 │   └── routes/           # 各APIハンドラ
 ├── public/               # フロントエンド（HTML/CSS/JS/画像）
-│   ├── index.html, admin.html, employee.html, 404.html
-│   ├── css/, js/
+│   ├── index.html        # サービス紹介（HP）
+│   ├── app/              # アプリ画面（別URL） index.html / admin.html / employee.html
+│   ├── 404.html
+│   ├── css/, js/         # 共有CSS・JS（static-backend.js 含む）
 │   └── assets/           # キャラクター画像（ゴリ・お米・野菜）
 └── test/api.test.js      # API統合テスト
 ```

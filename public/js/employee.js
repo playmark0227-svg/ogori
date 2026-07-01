@@ -1,6 +1,6 @@
-import { api, $, el, toast, renderNav, escapeHtml, statusBadge, STATIC_MODE, staticBackend } from './common.js';
+import { api, $, el, toast, renderAppNav, escapeHtml, statusBadge, STATIC_MODE, staticBackend } from './common.js';
 
-$('#nav').innerHTML = renderNav('employee');
+$('#nav').innerHTML = renderAppNav('employee');
 
 const authView = $('#authView');
 const portalView = $('#portalView');

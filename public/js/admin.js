@@ -1,8 +1,8 @@
 import {
-  api, $, $$, el, toast, yen, renderNav, escapeHtml, productBadge, statusBadge, STATIC_MODE, staticBackend,
+  api, $, $$, el, toast, yen, renderAppNav, escapeHtml, productBadge, statusBadge, STATIC_MODE, staticBackend,
 } from './common.js';
 
-$('#nav').innerHTML = renderNav('admin');
+$('#nav').innerHTML = renderAppNav('admin');
 
 const authView = $('#authView');
 const dashView = $('#dashView');
@@ -177,7 +177,7 @@ async function loadEmployees() {
   if (!employees.length) {
     area.innerHTML = `
       <div class="empty">
-        <img src="assets/gori-think.png" alt="ゴリ" />
+        <img src="../assets/gori-think.png" alt="ゴリ" />
         <p>まだ社員が登録されていません。<br>「＋ 社員を登録」から追加しましょう。</p>
       </div>`;
     return;

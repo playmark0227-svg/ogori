@@ -13,22 +13,27 @@
 <div id="nav"></div>
 
 <!-- ヒーロー -->
-<section class="hero">
+<section class="hero" id="top">
   <div class="wrap hero__inner">
     <div class="hero__copy">
-      <p class="eyebrow">会社ごとのIDで、福利厚生をまるごとサポート</p>
+      <span class="pill"><span class="pill__dot"></span>会社ごとのIDで、福利厚生をまるごと</span>
       <h1 class="hero__title">社長のお米が、<br /><span class="hl">社員のご自宅</span>へ。</h1>
       <p class="hero__lead">
         毎日使う「お米」と「旬の野菜」を社員のご家庭へ直接お届け。
         利用率の高い福利厚生で、<strong>実質的な手取りアップ</strong>と<strong>定着率の向上</strong>を実現します。
       </p>
       <div class="hero__cta">
-        <a class="btn btn--gold" href="admin.html?mode=register">無料で会社IDを発行する</a>
-        <a class="btn btn--ghost" href="#how">サービスを見る</a>
+        <a class="btn btn--gold btn--lg" href="app/admin.html?mode=register">無料で会社IDを発行</a>
+        <a class="btn btn--ghost btn--lg" href="app/">アプリを見る</a>
       </div>
-      <p class="hero__note">1人あたり <strong>月額1万円（税別）</strong>／導入・配送・利用促進サポート込み</p>
+      <ul class="hero__trust">
+        <li><strong>¥10,000</strong><span>／人・月（税別）</span></li>
+        <li><strong>導入・配送</strong><span>サポート込み</span></li>
+        <li><strong>偶数月お米</strong><span>／奇数月 野菜</span></li>
+      </ul>
     </div>
     <div class="hero__art">
+      <div class="hero__blob"></div>
       <img src="assets/gori-hero.png" alt="オゴリのキャラクター ゴリ" class="hero__gori" />
       <div class="hero__chip hero__chip--rice"><img src="assets/rice.png" alt="お米" /><span>偶数月はお米</span></div>
       <div class="hero__chip hero__chip--veg"><img src="assets/vegetable.svg" alt="旬の野菜" /><span>奇数月は野菜</span></div>
@@ -37,17 +42,17 @@
 </section>
 
 <!-- お悩み -->
-<section class="section section--tint" id="problems">
+<section class="section section--tint" id="features">
   <div class="wrap">
-    <div class="center">
+    <div class="section__head">
       <p class="eyebrow">こんなお悩みはありませんか？</p>
       <h2>福利厚生、ちゃんと活かせていますか？</h2>
     </div>
     <div class="problem-grid">
-      <div class="card problem"><span class="problem__no">01</span>福利厚生の<strong>利用率がよくない</strong></div>
-      <div class="card problem"><span class="problem__no">02</span>社員のためになっているか<strong>わからない</strong></div>
-      <div class="card problem"><span class="problem__no">03</span>採用単価費用が<strong>年々上がっている</strong></div>
-      <div class="card problem"><span class="problem__no">04</span>給料を上げ続けないと<strong>採用できない</strong></div>
+      <div class="card problem"><span class="problem__no">01</span><p>福利厚生の<strong>利用率がよくない</strong></p></div>
+      <div class="card problem"><span class="problem__no">02</span><p>社員のためになっているか<strong>わからない</strong></p></div>
+      <div class="card problem"><span class="problem__no">03</span><p>採用単価費用が<strong>年々上がっている</strong></p></div>
+      <div class="card problem"><span class="problem__no">04</span><p>給料を上げ続けないと<strong>採用できない</strong></p></div>
     </div>
     <div class="problem-gori">
       <img src="assets/gori-think.png" alt="悩むゴリ" />
@@ -56,10 +61,11 @@
   </div>
 </section>
 
-<!-- 解決策 / how -->
-<section class="section" id="how">
+<!-- 解決策 -->
+<section class="section">
   <div class="wrap solution">
     <div class="solution__art">
+      <div class="solution__ring"></div>
       <img src="assets/rice.png" alt="お米" class="float-slow" />
     </div>
     <div class="solution__copy">
@@ -73,16 +79,43 @@
       <ul class="ticks">
         <li>毎日使う消耗品だから、利用率が高い</li>
         <li>ご家族の分もまとめてお届け可能</li>
-        <li>ゆくゆくはオムツなど<strong>子育て世代向け</strong >も充実予定</li>
+        <li>ゆくゆくはオムツなど<strong>子育て世代向け</strong>も充実予定</li>
       </ul>
     </div>
   </div>
 </section>
 
-<!-- 導入効果 -->
+<!-- 使い方 3ステップ -->
 <section class="section section--tint">
   <div class="wrap">
-    <div class="center"><p class="eyebrow">導入期待効果</p><h2>採用にも、定着にも効く。</h2></div>
+    <div class="section__head">
+      <p class="eyebrow">導入はかんたん</p>
+      <h2>3ステップで始められます</h2>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <span class="step__no">1</span>
+        <h3>会社IDを発行</h3>
+        <p>会社情報を登録すると、専用の会社ID（例: OGORI-XXXXXX）が即時発行されます。</p>
+      </div>
+      <div class="step">
+        <span class="step__no">2</span>
+        <h3>社員を登録</h3>
+        <p>社員を追加すると社員コードと初期PINを発行。社員はIDでポータルにログインできます。</p>
+      </div>
+      <div class="step">
+        <span class="step__no">3</span>
+        <h3>毎月お届け</h3>
+        <p>偶数月はお米、奇数月は旬の野菜を、社員のご自宅（またはご家族）へお届けします。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 導入効果 -->
+<section class="section" id="effect">
+  <div class="wrap">
+    <div class="section__head"><p class="eyebrow">導入期待効果</p><h2>採用にも、定着にも効く。</h2></div>
     <div class="effect-grid">
       <div class="card effect">
         <div class="effect__num">1.7<span>倍</span></div>
@@ -104,7 +137,7 @@
 </section>
 
 <!-- 料金・スケジュール -->
-<section class="section" id="plan">
+<section class="section section--tint" id="plan">
   <div class="wrap plan">
     <div class="plan__price card card--pad-lg">
       <p class="eyebrow">費用（1人あたり）</p>
@@ -116,7 +149,7 @@
         <li>お米／野菜の商品費用</li>
         <li>配送料</li>
       </ul>
-      <a class="btn btn--primary btn--block" href="admin.html?mode=register">会社IDを発行して始める</a>
+      <a class="btn btn--primary btn--block btn--lg" href="app/admin.html?mode=register">会社IDを発行して始める</a>
     </div>
     <div class="plan__schedule">
       <p class="eyebrow">配送スケジュール</p>
@@ -128,15 +161,17 @@
 </section>
 
 <!-- 最終CTA -->
-<section class="section cta-final">
-  <div class="wrap cta-final__inner">
-    <img src="assets/gori-salute.png" alt="敬礼するゴリ" />
-    <div>
-      <h2>まずは会社IDを発行しましょう。</h2>
-      <p class="muted">登録は数分。すぐに社員の登録・配送管理を始められます。</p>
-      <div class="hero__cta">
-        <a class="btn btn--gold" href="admin.html?mode=register">無料で会社IDを発行</a>
-        <a class="btn btn--ghost" href="employee.html">社員の方はこちら</a>
+<section class="section">
+  <div class="wrap">
+    <div class="cta-final__inner">
+      <img src="assets/gori-salute.png" alt="敬礼するゴリ" />
+      <div class="cta-final__body">
+        <h2>まずは会社IDを発行しましょう。</h2>
+        <p>登録は数分。すぐに社員の登録・配送管理を始められます。</p>
+        <div class="hero__cta">
+          <a class="btn btn--gold btn--lg" href="app/admin.html?mode=register">無料で会社IDを発行</a>
+          <a class="btn btn--ghost btn--lg" href="app/employee.html">社員の方はこちら</a>
+        </div>
       </div>
     </div>
   </div>
@@ -144,8 +179,20 @@
 
 <footer class="footer">
   <div class="wrap footer__inner">
-    <div><strong>オゴリ (OGORI)</strong>　社長のお米が、社員のご自宅へ。</div>
-    <div class="muted">© 2026 OGORI. デモ用アプリケーション。</div>
+    <div class="footer__brand">
+      <span class="brand__logo">🦍</span>
+      <div>
+        <strong>オゴリ (OGORI)</strong>
+        <div class="muted">社長のお米が、社員のご自宅へ。</div>
+      </div>
+    </div>
+    <nav class="footer__links">
+      <a href="#features">特長</a>
+      <a href="#effect">導入効果</a>
+      <a href="#plan">料金</a>
+      <a href="app/">アプリを開く</a>
+    </nav>
+    <div class="muted footer__copy">© 2026 OGORI. デモ用アプリケーション。</div>
   </div>
 </footer>
 

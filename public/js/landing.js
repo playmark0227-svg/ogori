@@ -1,6 +1,14 @@
-import { api, $, renderNav } from './common.js';
+import { api, $, renderSiteNav } from './common.js';
 
-$('#nav').innerHTML = renderNav('home');
+$('#nav').innerHTML = renderSiteNav();
+
+// スクロールでヘッダーに境界線・影を付ける（洗練された挙動）。
+const siteNav = $('#siteNav');
+if (siteNav) {
+  const onScroll = () => siteNav.classList.toggle('is-stuck', window.scrollY > 8);
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+}
 
 // 配送スケジュールのプレビューを描画。
 (async () => {

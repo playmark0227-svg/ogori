@@ -72,9 +72,29 @@ img { max-width: 100%; display: block; }
   background: var(--blue); display: grid; place-items: center;
   color: #fff; font-size: 20px; box-shadow: var(--shadow-sm);
 }
+.brand__name { display: inline-flex; align-items: baseline; gap: 6px; }
 .brand__en { font-size: 12px; letter-spacing: 0.18em; color: var(--blue); font-weight: 700; }
 .nav__spacer { flex: 1; }
 .nav__links { display: flex; gap: 8px; align-items: center; }
+
+/* ---------- HP（サービス紹介）ヘッダー ---------- */
+.site-nav {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(251, 246, 236, 0.82);
+  backdrop-filter: saturate(140%) blur(12px);
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.site-nav.is-stuck { border-bottom-color: var(--line); box-shadow: 0 6px 20px -16px rgba(43,58,74,.5); }
+.site-nav__inner { display: flex; align-items: center; gap: 24px; height: 68px; }
+.site-nav__links { display: flex; gap: 26px; margin-left: 12px; flex: 1; }
+.site-nav__links a { color: var(--ink-soft); font-weight: 700; font-size: 14.5px; }
+.site-nav__links a:hover { color: var(--ink); text-decoration: none; }
+.site-nav__cta { display: flex; gap: 10px; align-items: center; }
+@media (max-width: 720px) {
+  .site-nav__links { display: none; }
+  .site-nav__cta .btn--ghost { display: none; }
+}
 
 /* ---------- ボタン ---------- */
 .btn {
@@ -95,8 +115,18 @@ img { max-width: 100%; display: block; }
 .btn--danger { background: transparent; border-color: var(--danger); color: var(--danger); }
 .btn--danger:hover { background: var(--danger); color: #fff; }
 .btn--sm { padding: 7px 13px; font-size: 13px; }
+.btn--lg { padding: 14px 26px; font-size: 16px; }
 .btn--block { width: 100%; }
 .btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+
+/* ---------- ピル型バッジ ---------- */
+.pill {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 14px; border-radius: 999px; background: var(--white);
+  border: 1px solid var(--line); box-shadow: var(--shadow-sm);
+  font-size: 13px; font-weight: 700; color: var(--ink-soft);
+}
+.pill__dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 0 4px var(--gold-050); }
 
 /* ---------- カード ---------- */
 .card {
@@ -171,6 +201,12 @@ tbody tr:hover { background: var(--cream); }
 .eyebrow { color: var(--blue); font-weight: 800; letter-spacing: 0.12em; font-size: 13px; margin-bottom: 10px; }
 
 /* ---------- フッター ---------- */
-.footer { background: var(--ink); color: #cdd7e0; padding: 40px 0; margin-top: 40px; }
-.footer a { color: #fff; }
-.footer__inner { display: flex; flex-wrap: wrap; gap: 20px; align-items: center; justify-content: space-between; }
+.footer { background: var(--ink); color: #cdd7e0; padding: 44px 0; margin-top: 0; }
+.footer a { color: #e7eef5; font-weight: 600; }
+.footer__inner { display: flex; flex-wrap: wrap; gap: 24px; align-items: center; justify-content: space-between; }
+.footer__brand { display: flex; align-items: center; gap: 12px; }
+.footer__brand strong { color: #fff; }
+.footer__links { display: flex; gap: 22px; flex-wrap: wrap; }
+.footer__links a { color: #cdd7e0; font-weight: 700; font-size: 14px; }
+.footer__links a:hover { color: #fff; }
+.footer__copy { font-size: 13px; width: 100%; border-top: 1px solid rgba(255,255,255,.08); padding-top: 16px; }

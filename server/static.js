@@ -24,8 +24,10 @@ const MIME = {
 // URLパス → 実ファイルのマッピング（拡張子なしのページは .html を補完）。
 const PAGE_ALIASES = {
   '/': 'index.html',
-  '/admin': 'admin.html',
-  '/employee': 'employee.html',
+  '/app': 'app/index.html',
+  '/app/': 'app/index.html',
+  '/admin': 'app/admin.html',
+  '/employee': 'app/employee.html',
 };
 
 export async function serveStatic(req, res, pathname, { statusCode = 200 } = {}) {
