@@ -1,7 +1,8 @@
-name: Deploy static preview to GitHub Pages
+name: Publish static preview to gh-pages
 
-# public/ をそのまま GitHub Pages に公開する。
-# 静的モード（サーバー無し）でブラウザ内データにより全画面をプレビューできる。
+# public/ を gh-pages ブランチへ公開する（Pages API を使わず push のみ）。
+# 初回だけ Settings → Pages で「Deploy from a branch: gh-pages / (root)」を選択してください。
+# 以降はこのワークフローが gh-pages を自動更新します。
 
 on:
   push:
@@ -12,36 +13,33 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
-# 同時デプロイは1つに制限（進行中のものは完了させる）。
 concurrency:
-  group: pages
-  cancel-in-progress: false
+  group: gh-pages-publish
+  cancel-in-progress: true
 
 jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  publish:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-        # ※ 初回のみ、リポジトリの Settings → Pages で
-        #   「Build and deployment > Source: GitHub Actions」を選択してください。
-        #   （Actions のトークンでは Pages を自動有効化できないため一度だけ手動設定が必要）
-
-      - name: Upload artifact (public/)
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./public
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Publish public/ to gh-pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+          SITE="$RUNNER_TEMP/site"
+          rm -rf "$SITE"
+          cp -r public "$SITE"
+          touch "$SITE/.nojekyll"   # Jekyll 処理を無効化
+          cd "$SITE"
+          git init -q
+          git checkout -q -b gh-pages
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Deploy static preview from ${GITHUB_SHA}"
+          git push -f "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" gh-pages

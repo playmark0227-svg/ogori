@@ -27,8 +27,11 @@
 サーバー不要で全画面をブラウザ上でお試しいただけます。
 
 - 公開URL: **https://playmark0227-svg.github.io/ogori/**
-  （`.github/workflows/pages.yml` が `public/` を自動デプロイ。初回は
-  リポジトリの Settings → Pages で「Source: GitHub Actions」を選択してください）
+- 初回のみ、リポジトリの **Settings → Pages** で
+  **「Deploy from a branch」→ Branch: `gh-pages` / `(root)`** を選択して保存してください。
+  （GitHub のセキュリティ上、Pages の有効化はオーナー本人の操作が必要です）
+- 有効化後は `.github/workflows/pages.yml` が `public/` を `gh-pages` ブランチへ
+  自動反映するため、push のたびにプレビューが更新されます。
 
 プレビュー（静的）モードでは、バックエンドの代わりに **ブラウザ内のデータ
 （localStorage）** で同じAPIを再現します（`public/js/static-backend.js`）。
