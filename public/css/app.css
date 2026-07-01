@@ -1,0 +1,94 @@
+/* 管理コンソール／社員ポータル共通スタイル */
+
+.app-main { padding: 32px 0 64px; }
+
+/* 認証カード */
+.auth { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; align-items: center; margin-top: 16px; }
+.auth__art { text-align: center; }
+.auth__art img { width: 170px; margin-inline: auto; filter: drop-shadow(0 16px 22px rgba(55,82,122,.25)); }
+.auth__art h2 { margin-top: 12px; }
+.tabs { display: flex; gap: 8px; margin-bottom: 20px; background: var(--cream); padding: 5px; border-radius: 999px; }
+.tab {
+  flex: 1; padding: 9px; border: none; background: transparent; border-radius: 999px;
+  font-family: inherit; font-weight: 700; font-size: 14px; cursor: pointer; color: var(--ink-soft);
+}
+.tab.is-active { background: #fff; color: var(--ink); box-shadow: var(--shadow-sm); }
+
+/* 会社IDバナー */
+.idbanner {
+  display: flex; align-items: center; justify-content: space-between; gap: 20px;
+  background: linear-gradient(120deg, var(--blue-050), var(--gold-050));
+  border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 24px;
+}
+.idbanner__left { display: flex; align-items: center; gap: 16px; }
+.idbanner__gori { width: 66px; flex-shrink: 0; }
+.idbanner__idrow { display: flex; align-items: center; gap: 10px; margin: 4px 0; flex-wrap: wrap; }
+.idbanner__label { font-size: 12px; font-weight: 800; color: var(--blue); letter-spacing: .1em; }
+.idbanner__id { font-size: 24px; font-weight: 900; letter-spacing: 0.06em; color: var(--ink); }
+
+/* 統計カード */
+.stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+.stat {
+  background: #fff; border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 20px; box-shadow: var(--shadow-sm);
+}
+.stat__label { font-size: 12.5px; color: var(--ink-soft); font-weight: 700; margin-bottom: 8px; }
+.stat__value { font-size: 30px; font-weight: 900; line-height: 1.1; }
+.stat__sub { font-size: 12.5px; color: var(--ink-soft); margin-top: 6px; }
+.stat--accent { background: linear-gradient(135deg, var(--blue), var(--blue-dark)); color: #fff; border: none; }
+.stat--accent .stat__label, .stat--accent .stat__sub { color: rgba(255,255,255,.85); }
+.stat__emoji { font-size: 26px; }
+
+/* セクションカード */
+.section-card { margin-bottom: 24px; }
+.section-card__head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; }
+.section-card__head h2 { margin: 0; font-size: 20px; }
+
+/* 月ストリップ */
+.month-strip { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-bottom: 20px; }
+.mcard { border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 12px; text-align: center; background: #fff; }
+.mcard--rice { background: var(--gold-050); }
+.mcard--veg { background: var(--green-050); }
+.mcard__m { font-weight: 900; font-size: 15px; }
+.mcard__e { font-size: 24px; }
+.mcard__c { font-size: 11.5px; color: var(--ink-soft); font-weight: 700; }
+
+/* 空状態 */
+.empty { text-align: center; padding: 40px 20px; color: var(--ink-soft); }
+.empty img { width: 96px; margin: 0 auto 12px; opacity: .9; }
+
+/* 認証情報表示（PIN発行） */
+.creds { background: var(--gold-050); border: 1px dashed var(--gold-dark); border-radius: var(--radius-sm); padding: 16px; margin: 4px 0 14px; }
+.creds__row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px dashed #e4cf9a; }
+.creds__row:last-child { border-bottom: none; }
+.creds__row b { font-size: 18px; letter-spacing: .05em; }
+
+/* 社員ポータル */
+.portal-head { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
+.portal-head img { width: 60px; }
+.timeline { position: relative; padding-left: 28px; margin-top: 8px; }
+.timeline::before { content: ""; position: absolute; left: 9px; top: 6px; bottom: 6px; width: 2px; background: var(--line); }
+.tl-item { position: relative; padding: 10px 0 10px 6px; display: flex; align-items: center; gap: 14px; }
+.tl-item::before {
+  content: ""; position: absolute; left: -23px; top: 18px; width: 14px; height: 14px; border-radius: 50%;
+  background: #fff; border: 3px solid var(--blue-light);
+}
+.tl-item--rice::before { border-color: var(--gold); }
+.tl-item--veg::before { border-color: var(--green); }
+.tl-item__month { font-weight: 900; min-width: 68px; }
+.tl-item__emoji { font-size: 26px; }
+.tl-item__name { flex: 1; font-weight: 700; }
+
+.addr-status { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; font-size: 13px; }
+
+@media (max-width: 860px) {
+  .auth { grid-template-columns: 1fr; }
+  .auth__art { display: none; }
+  .stat-grid { grid-template-columns: repeat(2, 1fr); }
+  .month-strip { grid-template-columns: repeat(3, 1fr); }
+  .idbanner { flex-direction: column; align-items: flex-start; }
+}
+@media (max-width: 480px) {
+  .stat-grid { grid-template-columns: 1fr; }
+  .month-strip { grid-template-columns: repeat(2, 1fr); }
+}

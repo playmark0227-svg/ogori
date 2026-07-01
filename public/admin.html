@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>企業管理 ｜ オゴリ (OGORI)</title>
+<link rel="icon" href="/assets/gori-salute.png" />
+<link rel="stylesheet" href="/css/style.css" />
+<link rel="stylesheet" href="/css/app.css" />
+</head>
+<body>
+<div id="nav"></div>
+
+<main class="wrap app-main">
+  <!-- 未ログイン: 認証カード -->
+  <section id="authView" class="hidden">
+    <div class="auth">
+      <div class="auth__art">
+        <img src="/assets/gori-salute.png" alt="ゴリ" />
+        <h2>企業管理コンソール</h2>
+        <p class="muted">会社IDを発行して、社員の福利厚生をまるごと管理。</p>
+      </div>
+      <div class="card card--pad-lg auth__form">
+        <div class="tabs">
+          <button class="tab" data-tab="register">新規登録（ID発行）</button>
+          <button class="tab" data-tab="login">ログイン</button>
+        </div>
+
+        <form id="registerForm" class="tabpane">
+          <div id="registerAlert"></div>
+          <div class="field"><label>会社名</label><input name="companyName" required maxlength="120" placeholder="株式会社オゴリ" /></div>
+          <div class="field"><label>ご担当者名</label><input name="adminName" required maxlength="80" placeholder="福利厚生 太郎" /></div>
+          <div class="field"><label>メールアドレス</label><input name="adminEmail" type="email" required placeholder="you@example.com" /></div>
+          <div class="field"><label>パスワード</label><input name="password" type="password" required minlength="8" placeholder="8文字以上" /><div class="hint">8文字以上で設定してください。</div></div>
+          <button class="btn btn--gold btn--block" type="submit">会社IDを発行する</button>
+        </form>
+
+        <form id="loginForm" class="tabpane hidden">
+          <div id="loginAlert"></div>
+          <div class="field"><label>メールアドレス</label><input name="adminEmail" type="email" required placeholder="you@example.com" /></div>
+          <div class="field"><label>パスワード</label><input name="password" type="password" required placeholder="パスワード" /></div>
+          <button class="btn btn--primary btn--block" type="submit">ログイン</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ログイン後: ダッシュボード -->
+  <section id="dashView" class="hidden">
+    <!-- 会社IDバナー -->
+    <div class="idbanner">
+      <div class="idbanner__left">
+        <img src="/assets/gori-salute.png" alt="ゴリ" class="idbanner__gori" />
+        <div>
+          <div class="muted" style="font-size:13px;font-weight:700">ようこそ、<span id="companyName"></span> の管理コンソールへ</div>
+          <div class="idbanner__idrow">
+            <span class="idbanner__label">会社ID</span>
+            <span id="companyIdValue" class="idbanner__id mono"></span>
+            <button id="copyIdBtn" class="btn btn--ghost btn--sm">コピー</button>
+          </div>
+          <div class="hint">この会社IDは社員のログインに必要です。社員へお伝えください。</div>
+        </div>
+      </div>
+      <button id="logoutBtn" class="btn btn--ghost btn--sm">ログアウト</button>
+    </div>
+
+    <!-- 統計カード -->
+    <div id="statCards" class="stat-grid"></div>
+
+    <!-- 社員管理 -->
+    <div class="card section-card">
+      <div class="section-card__head">
+        <h2>社員管理</h2>
+        <button id="addEmpBtn" class="btn btn--primary btn--sm">＋ 社員を登録</button>
+      </div>
+      <div id="employeesArea"></div>
+    </div>
+
+    <!-- 配送スケジュール -->
+    <div class="card section-card">
+      <div class="section-card__head">
+        <h2>配送スケジュール</h2>
+        <div class="hint">偶数月はお米、奇数月は旬の野菜をお届け。</div>
+      </div>
+      <div id="deliveryMonths" class="month-strip"></div>
+      <div id="deliveriesArea"></div>
+    </div>
+  </section>
+</main>
+
+<div id="modalHost"></div>
+<script type="module" src="/js/admin.js"></script>
+</body>
+</html>

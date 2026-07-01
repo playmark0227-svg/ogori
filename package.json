@@ -1,0 +1,25 @@
+{
+  "name": "ogori",
+  "version": "1.0.0",
+  "description": "オゴリ (OGORI) — 会社ごとのIDを発行して社内の福利厚生をサポートするプラットフォーム。社長のお米・野菜が社員のご自宅に届く。",
+  "type": "module",
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "scripts": {
+    "start": "node --experimental-sqlite server/index.js",
+    "dev": "node --experimental-sqlite --watch server/index.js",
+    "seed": "node --experimental-sqlite server/seed.js",
+    "test": "node --experimental-sqlite --test test/*.test.js"
+  },
+  "keywords": [
+    "福利厚生",
+    "welfare",
+    "benefits",
+    "hr",
+    "ogori",
+    "gorilla"
+  ],
+  "license": "MIT",
+  "private": true
+}

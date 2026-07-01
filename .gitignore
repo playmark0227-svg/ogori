@@ -1,0 +1,15 @@
+# データベース（ローカル実行時に生成される）
+/data/*.db
+/data/*.db-journal
+/data/*.db-wal
+/data/*.db-shm
+
+# 依存関係（本プロジェクトは基本的に依存無し）
+node_modules/
+
+# ログ・一時ファイル
+*.log
+.DS_Store
+.env
+.env.local
+*.tmp
