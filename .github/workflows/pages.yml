@@ -33,6 +33,9 @@ jobs:
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
+        with:
+          # Pages が未設定でも Actions トークン(pages: write)で自動的に有効化する。
+          enablement: true
 
       - name: Upload artifact (public/)
         uses: actions/upload-pages-artifact@v3
