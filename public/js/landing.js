@@ -1,4 +1,4 @@
-import { api, $, renderNav } from '/js/common.js';
+import { api, $, renderNav } from './common.js';
 
 $('#nav').innerHTML = renderNav('home');
 

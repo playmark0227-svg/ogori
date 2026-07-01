@@ -1,4 +1,4 @@
-import { api, $, el, toast, renderNav, escapeHtml, statusBadge } from '/js/common.js';
+import { api, $, el, toast, renderNav, escapeHtml, statusBadge, STATIC_MODE, staticBackend } from './common.js';
 
 $('#nav').innerHTML = renderNav('employee');
 
@@ -13,7 +13,25 @@ async function init() {
     showPortal(data);
   } catch {
     authView.classList.remove('hidden');
+    maybeShowDemoHint();
   }
+}
+
+// 静的（プレビュー）モードでは、デモ社員の認証情報を自動入力して案内する。
+function maybeShowDemoHint() {
+  if (!STATIC_MODE) return;
+  const demo = staticBackend.getDemoInfo();
+  if (!demo || !demo.employees || !demo.employees.length || $('#demoHint')) return;
+  const d = demo.employees[0];
+  const form = $('#empLoginForm');
+  form.companyId.value = d.companyId;
+  form.employeeCode.value = d.employeeCode;
+  form.pin.value = d.pin;
+  const box = el('div', { id: 'demoHint', class: 'demo-hint' });
+  box.innerHTML = `
+    <strong>🦍 プレビューモード</strong>
+    <p>デモ社員「${escapeHtml(d.name)}」の情報を入力済みです。そのままログインしてお試しください。</p>`;
+  form.parentElement.insertBefore(box, form);
 }
 
 // ---------------------------------------------------------------------------

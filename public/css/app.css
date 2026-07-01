@@ -57,6 +57,16 @@
 .empty { text-align: center; padding: 40px 20px; color: var(--ink-soft); }
 .empty img { width: 96px; margin: 0 auto 12px; opacity: .9; }
 
+/* プレビュー（静的）モードのデモ案内 */
+.demo-hint {
+  background: linear-gradient(120deg, var(--blue-050), var(--gold-050));
+  border: 1px dashed var(--blue-light); border-radius: var(--radius-sm);
+  padding: 14px 16px; margin-bottom: 18px; font-size: 13.5px;
+}
+.demo-hint strong { display: block; margin-bottom: 4px; }
+.demo-hint p { margin: 0 0 8px; color: var(--ink-soft); }
+.demo-hint__cred { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; margin-bottom: 10px; font-size: 13px; }
+
 /* 認証情報表示（PIN発行） */
 .creds { background: var(--gold-050); border: 1px dashed var(--gold-dark); border-radius: var(--radius-sm); padding: 16px; margin: 4px 0 14px; }
 .creds__row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px dashed #e4cf9a; }

@@ -1,7 +1,29 @@
 // 共通ユーティリティ: APIクライアント、トースト、DOMヘルパ、フォーマッタ。
+import * as staticBackend from './static-backend.js';
+
+// 静的モード判定: バックエンド無し（GitHub Pages 等）ではブラウザ内データで動作する。
+// - github.io ホスト、file:// で開いた場合、または window.OGORI_STATIC=true の明示指定で有効。
+export const STATIC_MODE =
+  typeof window !== 'undefined' &&
+  (window.OGORI_STATIC === true ||
+    location.protocol === 'file:' ||
+    /(^|\.)github\.io$/i.test(location.hostname));
+
+export { staticBackend };
 
 export const api = {
   async request(method, path, body) {
+    // 静的モード: ネットワークを使わずローカルのモックバックエンドで応答。
+    if (STATIC_MODE) {
+      const { status, data } = staticBackend.handle(method, path, body);
+      if (status >= 400) {
+        const err = new Error((data && data.error) || `エラー (${status})`);
+        err.status = status;
+        err.data = data;
+        throw err;
+      }
+      return data;
+    }
     const opts = { method, headers: {}, credentials: 'same-origin' };
     if (body !== undefined) {
       opts.headers['Content-Type'] = 'application/json';
@@ -85,14 +107,14 @@ export function statusBadge(status) {
 // ---- 共通ナビ描画 ----
 export function renderNav(active) {
   const links = [
-    { href: '/', label: 'ホーム', key: 'home' },
-    { href: '/admin', label: '企業管理', key: 'admin' },
-    { href: '/employee', label: '社員ポータル', key: 'employee' },
+    { href: 'index.html', label: 'ホーム', key: 'home' },
+    { href: 'admin.html', label: '企業管理', key: 'admin' },
+    { href: 'employee.html', label: '社員ポータル', key: 'employee' },
   ];
   return `
   <header class="nav">
     <div class="wrap nav__inner">
-      <a class="brand" href="/">
+      <a class="brand" href="index.html">
         <span class="brand__logo">🦍</span>
         <span>オゴリ <span class="brand__en">OGORI</span></span>
       </a>

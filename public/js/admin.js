@@ -1,6 +1,6 @@
 import {
-  api, $, $$, el, toast, yen, renderNav, escapeHtml, productBadge, statusBadge,
-} from '/js/common.js';
+  api, $, $$, el, toast, yen, renderNav, escapeHtml, productBadge, statusBadge, STATIC_MODE, staticBackend,
+} from './common.js';
 
 $('#nav').innerHTML = renderNav('admin');
 
@@ -26,6 +26,28 @@ function showAuth() {
   authView.classList.remove('hidden');
   const params = new URLSearchParams(location.search);
   selectTab(params.get('mode') === 'login' ? 'login' : 'register');
+  maybeShowDemoHint();
+}
+
+// 静的（プレビュー）モードでは、デモ会社のワンクリックログインを案内する。
+function maybeShowDemoHint() {
+  if (!STATIC_MODE) return;
+  const demo = staticBackend.getDemoInfo();
+  if (!demo || $('#demoHint')) return;
+  const host = $('.auth__form');
+  const box = el('div', { id: 'demoHint', class: 'demo-hint' });
+  box.innerHTML = `
+    <strong>🦍 プレビューモード</strong>
+    <p>サーバー無しのデモです。データはこのブラウザに保存されます。デモ会社ですぐお試しいただけます。</p>
+    <div class="demo-hint__cred mono">${escapeHtml(demo.adminEmail)} / ${escapeHtml(demo.adminPassword)}</div>
+    <button class="btn btn--gold btn--sm" id="demoLoginBtn" type="button">デモ会社でログイン</button>`;
+  host.prepend(box);
+  $('#demoLoginBtn').addEventListener('click', async () => {
+    try {
+      await api.post('/api/companies/login', { adminEmail: demo.adminEmail, password: demo.adminPassword });
+      showDashboard(await api.get('/api/companies/me'));
+    } catch (err) { toast(err.message, 'error'); }
+  });
 }
 
 // ---------------------------------------------------------------------------
@@ -155,7 +177,7 @@ async function loadEmployees() {
   if (!employees.length) {
     area.innerHTML = `
       <div class="empty">
-        <img src="/assets/gori-think.png" alt="ゴリ" />
+        <img src="assets/gori-think.png" alt="ゴリ" />
         <p>まだ社員が登録されていません。<br>「＋ 社員を登録」から追加しましょう。</p>
       </div>`;
     return;
@@ -280,7 +302,7 @@ function showCredentials(creds, title) {
   const node = el('div', { class: 'stack' });
   node.innerHTML = `
     <h3>${escapeHtml(title)}</h3>
-    <p class="muted">社員は下記情報で <a href="/employee" target="_blank">社員ポータル</a> にログインできます。</p>
+    <p class="muted">社員は下記情報で <a href="employee.html" target="_blank">社員ポータル</a> にログインできます。</p>
     <div class="creds">
       <div class="creds__row"><span>会社ID</span><b class="mono">${escapeHtml(creds.companyId)}</b></div>
       <div class="creds__row"><span>社員コード</span><b class="mono">${escapeHtml(creds.employeeCode)}</b></div>
