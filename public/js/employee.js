@@ -110,6 +110,7 @@ function showPortal(data) {
   $('#addrForm').postalCode.value = addr.postalCode || '';
   $('#addrForm').address.value = addr.address || '';
   updateAddrStatus(addr.addressRegistered);
+  updatePortalNotice(addr.addressRegistered);
 
   // タイムライン
   renderTimeline(data.deliveries);
@@ -121,21 +122,42 @@ function updateAddrStatus(registered) {
     : '<span class="addr-status" style="color:var(--danger)">● 未登録</span>';
 }
 
+// 住所未登録のときはページ上部に案内バナーを表示する。
+function updatePortalNotice(registered) {
+  const host = $('#portalNotice');
+  if (!host) return;
+  if (registered) {
+    host.innerHTML = '';
+    return;
+  }
+  host.innerHTML = `
+    <div class="alert alert--warn" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+      <span>📮 <strong>お届け先住所が未登録です。</strong>お米・野菜のお届けには住所の登録が必要です。</span>
+      <button id="goAddrBtn" class="btn btn--gold btn--sm" type="button">今すぐ登録する</button>
+    </div>`;
+  $('#goAddrBtn').addEventListener('click', () => {
+    $('#addrForm').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setTimeout(() => $('#addrForm').postalCode.focus({ preventScroll: true }), 450);
+  });
+}
+
 function renderTimeline(deliveries) {
   const host = $('#empTimeline');
   if (!deliveries.length) {
     host.innerHTML = '<p class="muted">配送予定はまだありません。</p>';
     return;
   }
+  const today = new Date();
   host.innerHTML = `<div class="timeline">${deliveries
     .slice(0, 12)
     .map((d) => {
       const isRice = d.productType === 'rice';
+      const isNow = d.year === today.getFullYear() && d.month === today.getMonth() + 1;
       return `
-      <div class="tl-item ${isRice ? 'tl-item--rice' : 'tl-item--veg'}">
+      <div class="tl-item ${isRice ? 'tl-item--rice' : 'tl-item--veg'} ${isNow ? 'tl-item--now' : ''}">
         <span class="tl-item__month">${d.year}/${d.month}</span>
         <span class="tl-item__emoji">${isRice ? '🍚' : '🥬'}</span>
-        <span class="tl-item__name">${escapeHtml(d.productName)}</span>
+        <span class="tl-item__name">${escapeHtml(d.productName)}${isNow ? ' <span class="badge badge--blue">今月</span>' : ''}</span>
         ${statusBadge(d.status)}
       </div>`;
     })
@@ -157,6 +179,7 @@ $('#addrForm').addEventListener('submit', async (e) => {
       address: f.address.value.trim(),
     });
     updateAddrStatus(res.employee.addressRegistered);
+    updatePortalNotice(res.employee.addressRegistered);
     toast('お届け先を保存しました', 'ok');
   } catch (err) {
     $('#addrAlert').innerHTML = `<div class="alert alert--error">${escapeHtml(err.message)}</div>`;

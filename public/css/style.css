@@ -94,9 +94,29 @@ img { max-width: 100%; display: block; }
 .site-nav__links a { color: var(--ink-soft); font-weight: 700; font-size: 14.5px; }
 .site-nav__links a:hover { color: var(--ink); text-decoration: none; }
 .site-nav__cta { display: flex; gap: 10px; align-items: center; }
+
+/* モバイル用ハンバーガーメニュー */
+.site-nav__burger {
+  display: none; width: 42px; height: 42px; flex-shrink: 0;
+  border: 1px solid var(--line); background: #fff; border-radius: 12px; cursor: pointer;
+  flex-direction: column; justify-content: center; align-items: center; gap: 5px;
+}
+.site-nav__burger span { width: 18px; height: 2px; background: var(--ink); border-radius: 2px; transition: transform 0.2s, opacity 0.2s; }
+.site-nav__burger.is-open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.site-nav__burger.is-open span:nth-child(2) { opacity: 0; }
+.site-nav__burger.is-open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+.site-nav__menu { display: none; }
+
 @media (max-width: 720px) {
   .site-nav__links { display: none; }
-  .site-nav__cta .btn--ghost { display: none; }
+  .site-nav__cta { display: none; }
+  .site-nav__burger { display: flex; }
+  .site-nav__menu.is-open {
+    display: flex; flex-direction: column; gap: 4px;
+    padding: 10px 4vw 16px; border-top: 1px solid var(--line);
+  }
+  .site-nav__menu a { padding: 13px 12px; font-weight: 800; color: var(--ink); border-radius: 10px; font-size: 15px; }
+  .site-nav__menu a:hover { background: var(--blue-050); text-decoration: none; }
 }
 
 /* ---------- ボタン ---------- */
@@ -171,12 +191,14 @@ table { width: 100%; border-collapse: collapse; font-size: 14.5px; background: v
 th, td { text-align: left; padding: 13px 16px; border-bottom: 1px solid var(--line); }
 th { background: var(--cream); font-weight: 700; color: var(--ink-soft); font-size: 12.5px; letter-spacing: 0.03em; }
 tbody tr:last-child td { border-bottom: none; }
-tbody tr:hover { background: var(--cream); }
+tbody tr:nth-child(even) { background: #fcf9f1; }
+tbody tr:hover { background: var(--cream-deep); }
 
 /* ---------- アラート ---------- */
 .alert { padding: 12px 16px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 600; margin-bottom: 16px; }
 .alert--error { background: var(--danger-050); color: var(--danger); border: 1px solid #eec7c2; }
 .alert--ok { background: var(--green-050); color: #3f7a2f; border: 1px solid #cfe3bd; }
+.alert--warn { background: var(--gold-050); color: #7a5b16; border: 1px solid #ecd9a8; }
 
 /* ---------- トースト ---------- */
 .toast-host { position: fixed; right: 20px; bottom: 20px; z-index: 100; display: flex; flex-direction: column; gap: 10px; }

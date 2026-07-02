@@ -67,6 +67,9 @@
       <button id="logoutBtn" class="btn btn--ghost btn--sm">ログアウト</button>
     </div>
 
+    <!-- はじめかたガイド（セットアップ完了までの案内） -->
+    <div id="setupGuide"></div>
+
     <!-- 統計カード -->
     <div id="statCards" class="stat-grid"></div>
 
@@ -89,6 +92,11 @@
         <h2>配送スケジュール</h2>
         <div class="toolbar">
           <span class="hint">月を選んで表示。偶数月=お米／奇数月=野菜</span>
+          <select id="bulkStatus" class="bulk-select" aria-label="この月の配送を一括更新">
+            <option value="">一括更新…</option>
+            <option value="shipped">この月を「発送済」に</option>
+            <option value="delivered">この月を「お届け済」に</option>
+          </select>
           <button id="delivCsvBtn" class="btn btn--ghost btn--sm">この月をCSV出力</button>
         </div>
       </div>

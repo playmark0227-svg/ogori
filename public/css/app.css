@@ -74,6 +74,27 @@
 /* ツールバー（検索・CSV等） */
 .toolbar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
 .toolbar__search { width: 230px; padding: 8px 13px; font-size: 13.5px; border-radius: 999px; }
+.bulk-select { width: auto; padding: 8px 12px; border-radius: 999px; font-size: 13px; font-weight: 700; color: var(--ink-soft); }
+
+/* はじめかたガイド */
+.guide { margin-bottom: 24px; border-left: 4px solid var(--gold); }
+.guide__head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 14px; }
+.guide__head h2 { margin: 0; font-size: 17px; }
+.guide__steps { list-style: none; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 0; padding: 0; }
+.guide__steps li {
+  display: flex; gap: 11px; align-items: flex-start;
+  background: var(--cream); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 13px 14px;
+}
+.guide__steps li.is-done { background: var(--green-050); border-color: #cfe3bd; opacity: 0.8; }
+.guide__check {
+  flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%;
+  display: grid; place-items: center; font-weight: 900; font-size: 13px;
+  background: var(--blue); color: #fff;
+}
+.guide__steps li.is-done .guide__check { background: var(--green); }
+.guide__steps li strong { display: block; font-size: 14px; margin-bottom: 1px; }
+.guide__steps li div span { font-size: 12.5px; color: var(--ink-soft); }
+@media (max-width: 860px) { .guide__steps { grid-template-columns: 1fr; } }
 
 /* セクションカード */
 .section-card { margin-bottom: 24px; }
@@ -143,6 +164,7 @@
 .tl-item__month { font-weight: 900; min-width: 68px; }
 .tl-item__emoji { font-size: 26px; }
 .tl-item__name { flex: 1; font-weight: 700; }
+.tl-item--now { background: var(--blue-050); border-radius: 12px; padding-right: 12px; }
 
 .addr-status { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; font-size: 13px; }
 

@@ -10,9 +10,37 @@ if (siteNav) {
   window.addEventListener('scroll', onScroll, { passive: true });
 }
 
+// モバイルメニュー（ハンバーガー）。
+const burger = $('#navBurger');
+const menu = $('#navMenu');
+if (burger && menu) {
+  burger.addEventListener('click', () => {
+    const open = menu.classList.toggle('is-open');
+    burger.classList.toggle('is-open', open);
+    burger.setAttribute('aria-expanded', String(open));
+  });
+  // リンクを押したら閉じる
+  menu.addEventListener('click', (e) => {
+    if (e.target.closest('a')) {
+      menu.classList.remove('is-open');
+      burger.classList.remove('is-open');
+      burger.setAttribute('aria-expanded', 'false');
+    }
+  });
+}
+
+// ページトップへ戻るボタン。
+const toTop = $('#toTop');
+if (toTop) {
+  const onTopScroll = () => toTop.classList.toggle('is-visible', window.scrollY > 600);
+  onTopScroll();
+  window.addEventListener('scroll', onTopScroll, { passive: true });
+  toTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+}
+
 // スクロール表示アニメーション（主要ブロックへ自動付与）。
 const revealTargets = $$(
-  '.section__head, .problem, .problem-gori, .solution__copy, .solution__art, .step, .effect, .plan__price, .plan__schedule, .sim, .faq details, .cta-final__inner'
+  '.section__head, .problem, .problem-gori, .solution__copy, .solution__art, .step, .effect, .voice, .plan__price, .plan__schedule, .sim, .faq details, .cta-final__inner'
 );
 if ('IntersectionObserver' in window) {
   const io = new IntersectionObserver(

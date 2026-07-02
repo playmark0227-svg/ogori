@@ -126,7 +126,15 @@ export function renderSiteNav() {
         <a class="btn btn--ghost btn--sm" href="app/employee.html">社員ログイン</a>
         <a class="btn btn--gold btn--sm" href="app/">アプリを開く</a>
       </div>
+      <button class="site-nav__burger" id="navBurger" type="button" aria-label="メニューを開く" aria-expanded="false" aria-controls="navMenu">
+        <span></span><span></span><span></span>
+      </button>
     </div>
+    <nav class="site-nav__menu" id="navMenu">
+      ${links.map((l) => `<a href="${l.href}">${l.label}</a>`).join('')}
+      <a href="app/employee.html">社員ログイン</a>
+      <a href="app/">アプリを開く →</a>
+    </nav>
   </header>`;
 }
 

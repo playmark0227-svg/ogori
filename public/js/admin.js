@@ -219,7 +219,14 @@ function renderEmployees() {
     area.innerHTML = `<div class="empty"><p>「${escapeHtml(q)}」に一致する社員は見つかりませんでした。</p></div>`;
     return;
   }
-  area.innerHTML = `
+
+  // お届け先未登録の社員がいれば注意を表示（配送に必須のため）。
+  const missing = employeesCache.filter((e) => e.status === 'active' && !e.addressRegistered);
+  const warnHtml = missing.length
+    ? `<div class="alert alert--warn">📮 お届け先が未登録の稼働中社員が <strong>${missing.length}名</strong> います（${missing.slice(0, 3).map((e) => escapeHtml(e.name)).join('、')}${missing.length > 3 ? ` 他${missing.length - 3}名` : ''}）。「編集」から登録するか、社員ポータルでの登録をご案内ください。</div>`
+    : '';
+
+  area.innerHTML = warnHtml + `
     <div class="table-wrap">
       <table>
         <thead><tr>
@@ -258,6 +265,58 @@ function renderEmployees() {
     if (b.dataset.act === 'pin') b.onclick = () => resetPin(emp);
     if (b.dataset.act === 'del') b.onclick = () => deleteEmployee(emp);
   });
+  updateSetupGuide();
+}
+
+// ---------------------------------------------------------------------------
+// はじめかたガイド（セットアップの進捗。全部済んだら消える）
+// ---------------------------------------------------------------------------
+function updateSetupGuide() {
+  const host = $('#setupGuide');
+  if (!host) return;
+  const total = employeesCache.length;
+  const withAddr = employeesCache.filter((e) => e.addressRegistered).length;
+  const managed = deliveriesCache.some((d) => d.status !== 'scheduled');
+
+  const steps = [
+    {
+      done: total > 0,
+      title: '社員を登録する',
+      desc: total > 0 ? `${total}名 登録済み` : '「＋ 社員を登録」から追加しましょう',
+    },
+    {
+      done: total > 0 && withAddr === total,
+      title: 'お届け先住所をそろえる',
+      desc: total > 0 ? `${withAddr}/${total}名 登録済み` : '社員を登録すると設定できます',
+    },
+    {
+      done: managed,
+      title: '配送状況を更新する',
+      desc: managed ? '運用が始まっています' : '発送したら「発送済」に更新しましょう',
+    },
+  ];
+  if (steps.every((s) => s.done)) {
+    host.innerHTML = '';
+    return;
+  }
+  host.innerHTML = `
+    <div class="card guide">
+      <div class="guide__head">
+        <h2>🦍 はじめかたガイド</h2>
+        <span class="muted">${steps.filter((s) => s.done).length} / ${steps.length} 完了</span>
+      </div>
+      <ol class="guide__steps">
+        ${steps
+          .map(
+            (s, i) => `
+          <li class="${s.done ? 'is-done' : ''}">
+            <span class="guide__check">${s.done ? '✓' : i + 1}</span>
+            <div><strong>${s.title}</strong><span>${s.desc}</span></div>
+          </li>`
+          )
+          .join('')}
+      </ol>
+    </div>`;
 }
 
 $('#addEmpBtn').addEventListener('click', () => openEmployeeModal(null));
@@ -498,7 +557,31 @@ function renderDeliveries() {
       }
     };
   });
+  updateSetupGuide();
 }
+
+// 選択中の月の配送を一括でステータス更新。
+$('#bulkStatus')?.addEventListener('change', async (e) => {
+  const status = e.target.value;
+  e.target.value = '';
+  if (!status) return;
+  const targets = deliveriesCache.filter(
+    (d) => `${d.year}-${String(d.month).padStart(2, '0')}` === selectedMonthKey && d.status !== status
+  );
+  if (!targets.length) return toast('更新対象がありません', 'error');
+  const label = status === 'shipped' ? '発送済' : 'お届け済';
+  const [y, m] = (selectedMonthKey || '-').split('-').map(Number);
+  if (!confirm(`${y}年${m}月の${targets.length}件をすべて「${label}」に更新しますか？`)) return;
+  try {
+    for (const d of targets) {
+      await api.patch(`/api/deliveries/${d.id}`, { status });
+    }
+    toast(`${targets.length}件を「${label}」に更新しました`, 'ok');
+  } catch (err) {
+    toast(err.message, 'error');
+  }
+  await loadDeliveries();
+});
 
 // 選択中の月の配送リストをCSVでダウンロード。
 $('#delivCsvBtn')?.addEventListener('click', () => {

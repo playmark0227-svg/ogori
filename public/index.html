@@ -42,6 +42,9 @@
       <div class="hero__chip hero__chip--veg"><img src="assets/vegetable.svg" alt="旬の野菜" /><span>奇数月は野菜</span></div>
     </div>
   </div>
+  <div class="hero__wave" aria-hidden="true">
+    <svg viewBox="0 0 1440 70" preserveAspectRatio="none"><path d="M0,42 C240,72 480,6 720,20 C960,34 1200,62 1440,28 L1440,70 L0,70 Z" fill="#f3ead7"/></svg>
+  </div>
 </section>
 
 <!-- お悩み -->
@@ -139,8 +142,42 @@
   </div>
 </section>
 
+<!-- 導入企業の声 -->
+<section class="section section--tint" id="voices">
+  <div class="wrap">
+    <div class="section__head">
+      <p class="eyebrow">導入企業の声</p>
+      <h2>「オゴリにしてよかった」の声、続々。</h2>
+    </div>
+    <div class="voice-grid">
+      <figure class="card voice">
+        <blockquote>「お米がもらえる会社」というだけで、学生さんの食いつきが全然違います。説明会の空気が変わりました。</blockquote>
+        <figcaption>
+          <img src="assets/gori-salute.png" alt="" />
+          <div><strong>製造業・従業員48名</strong><span>採用ご担当者さま</span></div>
+        </figcaption>
+      </figure>
+      <figure class="card voice">
+        <blockquote>「実質手取りが増えた」と社員に好評です。ご家族から「いい会社ですね」と言っていただけたのが嬉しかった。</blockquote>
+        <figcaption>
+          <img src="assets/gori-hero.png" alt="" />
+          <div><strong>IT企業・従業員23名</strong><span>総務ご担当者さま</span></div>
+        </figcaption>
+      </figure>
+      <figure class="card voice">
+        <blockquote>毎月「会社からのお届け物」が家に届く。それだけで会社への愛着が変わる。離職の相談が減りました。</blockquote>
+        <figcaption>
+          <img src="assets/gori-think.png" alt="" />
+          <div><strong>建設業・従業員65名</strong><span>代表取締役</span></div>
+        </figcaption>
+      </figure>
+    </div>
+    <p class="center hint" style="margin-top:18px">※ デモ用の架空の事例です。</p>
+  </div>
+</section>
+
 <!-- 料金・スケジュール -->
-<section class="section section--tint" id="plan">
+<section class="section" id="plan">
   <div class="wrap plan">
     <div class="plan__price card card--pad-lg">
       <p class="eyebrow">費用（1人あたり）</p>
@@ -164,7 +201,7 @@
 </section>
 
 <!-- 費用シミュレーター -->
-<section class="section" id="simulator">
+<section class="section section--tint" id="simulator">
   <div class="wrap">
     <div class="section__head">
       <p class="eyebrow">費用シミュレーター</p>
@@ -194,7 +231,7 @@
 </section>
 
 <!-- よくある質問 -->
-<section class="section section--tint" id="faq">
+<section class="section" id="faq">
   <div class="wrap narrow-lg">
     <div class="section__head">
       <p class="eyebrow">よくある質問</p>
@@ -260,6 +297,8 @@
     <div class="muted footer__copy">© 2026 OGORI. デモ用アプリケーション。</div>
   </div>
 </footer>
+
+<button id="toTop" class="totop" type="button" aria-label="ページの先頭へ戻る">↑</button>
 
 <script type="module" src="js/landing.js"></script>
 </body>
