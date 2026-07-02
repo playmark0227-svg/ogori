@@ -1,5 +1,5 @@
 import {
-  api, $, $$, el, toast, yen, renderAppNav, escapeHtml, productBadge, statusBadge, STATIC_MODE, staticBackend,
+  api, $, $$, el, toast, yen, renderAppNav, escapeHtml, productBadge, statusBadge, STATIC_MODE, staticBackend, downloadCsv,
 } from './common.js';
 
 $('#nav').innerHTML = renderAppNav('admin');
@@ -140,29 +140,46 @@ $('#logoutBtn').addEventListener('click', async () => {
   location.reload();
 });
 
+function productIcon(product) {
+  return product.type === 'rice' ? '../assets/rice.png' : '../assets/vegetable.svg';
+}
+
 function renderStats(s) {
+  // 統計タイル: ラベル（小・淡色）／値（セミボールド・インク色）／補足。色はアイコンチップのみに載せる。
   const cards = [
-    { label: '稼働中の社員', value: s.activeEmployees, sub: `登録総数 ${s.totalEmployees}名`, emoji: '👥' },
     {
-      label: '今月の月額費用（税込）', value: yen(s.cost.monthlyInclTax),
-      sub: `税別 ${yen(s.cost.monthlyExclTax)}／ 年間 ${yen(s.cost.annualInclTax)}`, accent: true,
+      label: '稼働中の社員', tint: 'blue', icon: '👥',
+      value: `${s.activeEmployees}<span class="stat__unit">名</span>`,
+      sub: `登録総数 ${s.totalEmployees}名`,
     },
     {
-      label: `今月（${s.thisMonth.month}月）のお届け`, value: s.thisMonth.product.emoji,
-      sub: s.thisMonth.product.name, emojiValue: true,
+      label: '今月の月額費用（税込）', tint: 'gold', icon: '💴', hero: true,
+      value: escapeHtml(yen(s.cost.monthlyInclTax)),
+      sub: `税別 ${yen(s.cost.monthlyExclTax)}／年間 ${yen(s.cost.annualInclTax)}`,
     },
     {
-      label: `来月（${s.nextMonth.month}月）のお届け`, value: s.nextMonth.product.emoji,
-      sub: s.nextMonth.product.name, emojiValue: true,
+      label: `今月（${s.thisMonth.month}月）のお届け`, tint: s.thisMonth.product.type === 'rice' ? 'gold' : 'green',
+      img: productIcon(s.thisMonth.product),
+      value: escapeHtml(s.thisMonth.product.name), small: true,
+      sub: '毎月10日ごろにお届け',
+    },
+    {
+      label: `来月（${s.nextMonth.month}月）のお届け`, tint: s.nextMonth.product.type === 'rice' ? 'gold' : 'green',
+      img: productIcon(s.nextMonth.product),
+      value: escapeHtml(s.nextMonth.product.name), small: true,
+      sub: '毎月10日ごろにお届け',
     },
   ];
   $('#statCards').innerHTML = cards
     .map(
       (c) => `
-    <div class="stat ${c.accent ? 'stat--accent' : ''}">
-      <div class="stat__label">${escapeHtml(c.label)}</div>
-      <div class="stat__value ${c.emojiValue ? 'stat__emoji' : ''}">${c.emojiValue ? c.value : escapeHtml(String(c.value))}</div>
-      <div class="stat__sub">${escapeHtml(c.sub)}</div>
+    <div class="stat">
+      <div class="stat__icon stat__icon--${c.tint}">${c.img ? `<img src="${c.img}" alt="" />` : c.icon}</div>
+      <div class="stat__body">
+        <div class="stat__label">${escapeHtml(c.label)}</div>
+        <div class="stat__value ${c.hero ? 'stat__value--hero' : ''} ${c.small ? 'stat__value--sm' : ''}">${c.value}</div>
+        <div class="stat__sub">${escapeHtml(c.sub)}</div>
+      </div>
     </div>`
     )
     .join('');
@@ -171,15 +188,35 @@ function renderStats(s) {
 // ---------------------------------------------------------------------------
 // 社員一覧
 // ---------------------------------------------------------------------------
+let employeesCache = [];
+
 async function loadEmployees() {
   const { employees } = await api.get('/api/employees');
+  employeesCache = employees;
+  renderEmployees();
+}
+
+function renderEmployees() {
   const area = $('#employeesArea');
-  if (!employees.length) {
+  const q = ($('#empSearch')?.value || '').trim().toLowerCase();
+  const employees = q
+    ? employeesCache.filter((e) =>
+        [e.name, e.employeeCode, e.department, e.email]
+          .filter(Boolean)
+          .some((v) => String(v).toLowerCase().includes(q))
+      )
+    : employeesCache;
+
+  if (!employeesCache.length) {
     area.innerHTML = `
       <div class="empty">
         <img src="../assets/gori-think.png" alt="ゴリ" />
         <p>まだ社員が登録されていません。<br>「＋ 社員を登録」から追加しましょう。</p>
       </div>`;
+    return;
+  }
+  if (!employees.length) {
+    area.innerHTML = `<div class="empty"><p>「${escapeHtml(q)}」に一致する社員は見つかりませんでした。</p></div>`;
     return;
   }
   area.innerHTML = `
@@ -224,6 +261,23 @@ async function loadEmployees() {
 }
 
 $('#addEmpBtn').addEventListener('click', () => openEmployeeModal(null));
+$('#empSearch')?.addEventListener('input', renderEmployees);
+
+// 社員一覧をCSVでダウンロード（Excelで開ける）。
+$('#csvBtn')?.addEventListener('click', () => {
+  if (!employeesCache.length) return toast('出力する社員がいません', 'error');
+  const rows = [
+    ['社員コード', '氏名', '部署', 'メール', '郵便番号', '住所', '状態', '登録日'],
+    ...employeesCache.map((e) => [
+      e.employeeCode, e.name, e.department || '', e.email || '',
+      e.postalCode || '', e.address || '',
+      e.status === 'active' ? '稼働中' : '停止中',
+      (e.createdAt || '').slice(0, 10),
+    ]),
+  ];
+  downloadCsv(`ogori-社員一覧-${new Date().toISOString().slice(0, 10)}.csv`, rows);
+  toast('社員一覧CSVをダウンロードしました', 'ok');
+});
 
 // ---------------------------------------------------------------------------
 // モーダル
@@ -346,44 +400,81 @@ async function deleteEmployee(emp) {
 // ---------------------------------------------------------------------------
 // 配送スケジュール
 // ---------------------------------------------------------------------------
+let deliveriesCache = [];
+let deliveryMonths = [];
+let selectedMonthKey = null;
+
+const monthKey = (m) => `${m.year}-${String(m.month).padStart(2, '0')}`;
+
 async function loadDeliveries() {
   const { deliveries, months } = await api.get('/api/deliveries');
-  const strip = $('#deliveryMonths');
-  strip.innerHTML = months.length
-    ? months
-        .slice(0, 6)
-        .map((m) => {
-          const isRice = m.productType === 'rice';
-          return `<div class="mcard ${isRice ? 'mcard--rice' : 'mcard--veg'}">
-            <div class="mcard__m">${m.year}/${m.month}</div>
-            <div class="mcard__e">${isRice ? '🍚' : '🥬'}</div>
-            <div class="mcard__c">${isRice ? 'お米5kg' : '旬の野菜'} ×${m.count}</div>
-          </div>`;
-        })
-        .join('')
-    : '<p class="muted">社員を登録すると配送スケジュールが表示されます。</p>';
+  deliveriesCache = deliveries;
+  deliveryMonths = months;
 
+  // 初期選択は「今月」。無ければ先頭の月。
+  if (!selectedMonthKey || !months.some((m) => monthKey(m) === selectedMonthKey)) {
+    const now = new Date();
+    const nowKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+    selectedMonthKey = months.some((m) => monthKey(m) === nowKey)
+      ? nowKey
+      : months.length ? monthKey(months[0]) : null;
+  }
+  renderDeliveries();
+}
+
+function renderDeliveries() {
+  const chips = $('#deliveryMonths');
   const area = $('#deliveriesArea');
-  if (!deliveries.length) {
+
+  if (!deliveryMonths.length) {
+    chips.innerHTML = '<p class="muted">社員を登録すると配送スケジュールが表示されます。</p>';
     area.innerHTML = '';
     return;
   }
+
+  chips.innerHTML = deliveryMonths
+    .map((m) => {
+      const isRice = m.productType === 'rice';
+      const key = monthKey(m);
+      return `<button type="button" class="mchip ${key === selectedMonthKey ? 'is-active' : ''}" data-month="${key}">
+        <span class="mchip__label">${m.year}/${m.month}</span>
+        <span class="mchip__emoji">${isRice ? '🍚' : '🥬'}</span>
+        <span class="mchip__count">×${m.count}</span>
+      </button>`;
+    })
+    .join('');
+  chips.querySelectorAll('.mchip').forEach((b) => {
+    b.onclick = () => {
+      selectedMonthKey = b.dataset.month;
+      renderDeliveries();
+    };
+  });
+
+  const rows = deliveriesCache.filter(
+    (d) => `${d.year}-${String(d.month).padStart(2, '0')}` === selectedMonthKey
+  );
+  const done = rows.filter((d) => d.status === 'delivered').length;
+  const shipped = rows.filter((d) => d.status === 'shipped').length;
+
   area.innerHTML = `
+    <p class="delivery-summary">
+      <strong>${Number(selectedMonthKey?.split('-')[0])}年${Number(selectedMonthKey?.split('-')[1])}月</strong>のお届け: 全${rows.length}件
+      <span class="muted">（お届け済 ${done}件・発送済 ${shipped}件・予定 ${rows.length - done - shipped}件）</span>
+    </p>
     <div class="table-wrap">
       <table>
-        <thead><tr><th>お届け月</th><th>社員</th><th>商品</th><th>状態</th><th>更新</th></tr></thead>
+        <thead><tr><th>お届け予定日</th><th>社員</th><th>商品</th><th>状態</th><th>更新</th></tr></thead>
         <tbody>
-          ${deliveries
-            .slice(0, 120)
+          ${rows
             .map(
               (d) => `
             <tr>
-              <td class="nowrap"><strong>${d.year}/${d.month}</strong><br><span class="muted" style="font-size:12px">${escapeHtml(d.scheduledDate)}</span></td>
+              <td class="nowrap"><strong>${escapeHtml(d.scheduledDate)}</strong></td>
               <td>${escapeHtml(d.employeeName)}<br><span class="muted mono" style="font-size:12px">${escapeHtml(d.employeeCode)}</span></td>
               <td>${productBadge(d.productType, d.productName)}</td>
               <td>${statusBadge(d.status)}</td>
               <td>
-                <select data-delivery="${d.id}" class="status-select">
+                <select data-delivery="${d.id}" class="status-select" aria-label="${escapeHtml(d.employeeName)}の配送状態">
                   <option value="scheduled" ${d.status === 'scheduled' ? 'selected' : ''}>予定</option>
                   <option value="shipped" ${d.status === 'shipped' ? 'selected' : ''}>発送済</option>
                   <option value="delivered" ${d.status === 'delivered' ? 'selected' : ''}>お届け済</option>
@@ -394,8 +485,7 @@ async function loadDeliveries() {
             .join('')}
         </tbody>
       </table>
-    </div>
-    ${deliveries.length > 120 ? `<p class="hint" style="margin-top:10px">最新120件を表示しています（全${deliveries.length}件）。</p>` : ''}`;
+    </div>`;
 
   area.querySelectorAll('select[data-delivery]').forEach((sel) => {
     sel.onchange = async () => {
@@ -409,6 +499,21 @@ async function loadDeliveries() {
     };
   });
 }
+
+// 選択中の月の配送リストをCSVでダウンロード。
+$('#delivCsvBtn')?.addEventListener('click', () => {
+  const rows = deliveriesCache.filter(
+    (d) => `${d.year}-${String(d.month).padStart(2, '0')}` === selectedMonthKey
+  );
+  if (!rows.length) return toast('出力する配送がありません', 'error');
+  const statusJa = { scheduled: '予定', shipped: '発送済', delivered: 'お届け済' };
+  const csv = [
+    ['お届け予定日', '社員コード', '氏名', '商品', '状態'],
+    ...rows.map((d) => [d.scheduledDate, d.employeeCode, d.employeeName, d.productName, statusJa[d.status] || d.status]),
+  ];
+  downloadCsv(`ogori-配送-${selectedMonthKey}.csv`, csv);
+  toast('配送CSVをダウンロードしました', 'ok');
+});
 
 async function refreshStats() {
   try {

@@ -110,6 +110,7 @@ export function renderSiteNav() {
     { href: '#features', label: '特長' },
     { href: '#effect', label: '導入効果' },
     { href: '#plan', label: '料金' },
+    { href: '#faq', label: 'よくある質問' },
   ];
   return `
   <header class="site-nav" id="siteNav">
@@ -149,6 +150,22 @@ export function renderAppNav(active) {
       </nav>
     </div>
   </header>`;
+}
+
+/** 行列データをCSVとしてダウンロード（Excel対応のためBOM付きUTF-8）。 */
+export function downloadCsv(filename, rows) {
+  const esc = (v) => {
+    const s = String(v ?? '');
+    return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+  };
+  const csv = rows.map((r) => r.map(esc).join(',')).join('\r\n');
+  const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = el('a', { href: url, download: filename });
+  document.body.append(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
 export function escapeHtml(s) {

@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>企業管理 ｜ オゴリ (OGORI)</title>
 <link rel="icon" href="../assets/gori-salute.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@700;900&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="../css/style.css" />
 <link rel="stylesheet" href="../css/app.css" />
 </head>
@@ -71,7 +74,11 @@
     <div class="card section-card">
       <div class="section-card__head">
         <h2>社員管理</h2>
-        <button id="addEmpBtn" class="btn btn--primary btn--sm">＋ 社員を登録</button>
+        <div class="toolbar">
+          <input type="search" id="empSearch" class="toolbar__search" placeholder="氏名・コード・部署で検索" aria-label="社員を検索" />
+          <button id="csvBtn" class="btn btn--ghost btn--sm">CSV出力</button>
+          <button id="addEmpBtn" class="btn btn--primary btn--sm">＋ 社員を登録</button>
+        </div>
       </div>
       <div id="employeesArea"></div>
     </div>
@@ -80,9 +87,12 @@
     <div class="card section-card">
       <div class="section-card__head">
         <h2>配送スケジュール</h2>
-        <div class="hint">偶数月はお米、奇数月は旬の野菜をお届け。</div>
+        <div class="toolbar">
+          <span class="hint">月を選んで表示。偶数月=お米／奇数月=野菜</span>
+          <button id="delivCsvBtn" class="btn btn--ghost btn--sm">この月をCSV出力</button>
+        </div>
       </div>
-      <div id="deliveryMonths" class="month-strip"></div>
+      <div id="deliveryMonths" class="month-chips"></div>
       <div id="deliveriesArea"></div>
     </div>
   </section>

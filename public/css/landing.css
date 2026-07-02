@@ -128,8 +128,59 @@
 .cta-final__body h2 { margin-bottom: 8px; }
 .cta-final__body p { color: #46586a; }
 
+/* 費用シミュレーター */
+.narrow-lg { width: min(760px, 92vw); margin-inline: auto; }
+.sim { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; max-width: 880px; margin-inline: auto; }
+.sim__count-label { font-weight: 800; font-size: 16px; display: block; margin-bottom: 18px; }
+.sim__count { font-size: 44px; font-weight: 700; color: var(--blue-dark); font-family: var(--font); }
+.sim__count-unit { font-size: 18px; font-weight: 800; margin-left: 2px; }
+.sim__scale { display: flex; justify-content: space-between; font-size: 12px; color: var(--ink-soft); font-weight: 700; margin-top: 8px; }
+.sim input[type="range"] {
+  -webkit-appearance: none; appearance: none; width: 100%; height: 10px; border: none;
+  border-radius: 999px; padding: 0; cursor: pointer;
+  background: linear-gradient(to right, var(--gold) var(--pct, 10%), var(--cream-deep) var(--pct, 10%));
+}
+.sim input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 28px; height: 28px; border-radius: 50%;
+  background: #fff; border: 3px solid var(--gold-dark); box-shadow: var(--shadow-sm);
+  transition: transform 0.1s;
+}
+.sim input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.1); }
+.sim input[type="range"]::-moz-range-thumb {
+  width: 24px; height: 24px; border-radius: 50%; background: #fff;
+  border: 3px solid var(--gold-dark); box-shadow: var(--shadow-sm);
+}
+.sim__hero { display: flex; flex-direction: column; margin-bottom: 14px; }
+.sim__label { font-size: 13px; font-weight: 700; color: var(--ink-soft); }
+.sim__value { font-size: clamp(40px, 5vw, 52px); font-weight: 700; color: var(--ink); line-height: 1.15; font-family: var(--font); }
+.sim__rows { margin: 0 0 10px; border-top: 1px solid var(--line); }
+.sim__rows > div { display: flex; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid var(--line); }
+.sim__rows dt { color: var(--ink-soft); font-size: 13.5px; font-weight: 700; }
+.sim__rows dd { margin: 0; font-weight: 700; }
+
+/* FAQ */
+.faq details {
+  background: var(--white); border: 1px solid var(--line); border-radius: var(--radius-sm);
+  padding: 0 20px; margin-bottom: 12px; box-shadow: var(--shadow-sm);
+}
+.faq summary {
+  list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between;
+  gap: 14px; padding: 17px 0; font-weight: 800; font-size: 15.5px;
+}
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::before { content: "Q."; color: var(--gold-dark); font-weight: 900; margin-right: 2px; }
+.faq__icon { position: relative; width: 22px; height: 22px; flex-shrink: 0; border-radius: 50%; background: var(--blue-050); }
+.faq__icon::before, .faq__icon::after {
+  content: ""; position: absolute; inset: 0; margin: auto; width: 10px; height: 2px;
+  border-radius: 2px; background: var(--blue-dark); transition: transform 0.2s;
+}
+.faq__icon::after { transform: rotate(90deg); }
+.faq details[open] .faq__icon::after { transform: rotate(0); }
+.faq details p { margin: 0; padding: 0 4px 18px 26px; color: var(--ink-soft); font-size: 14.5px; }
+
 /* レスポンシブ */
 @media (max-width: 880px) {
+  .sim { grid-template-columns: 1fr; gap: 24px; }
   .hero__inner { grid-template-columns: 1fr; }
   .hero__art { min-height: 320px; order: -1; }
   .problem-grid { grid-template-columns: repeat(2, 1fr); }

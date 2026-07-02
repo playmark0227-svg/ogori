@@ -6,6 +6,9 @@
 <title>オゴリ (OGORI) ｜ 社長のお米が、社員のご自宅へ届く福利厚生プラットフォーム</title>
 <meta name="description" content="会社ごとのIDを発行して社内の福利厚生をまるごとサポート。社長のお米・旬の野菜が社員のご自宅に届く、実質手取りアップの福利厚生サービス。" />
 <link rel="icon" href="assets/gori-salute.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@700;900&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="css/style.css" />
 <link rel="stylesheet" href="css/landing.css" />
 </head>
@@ -156,6 +159,68 @@
       <h3>偶数月はお米、奇数月は旬の野菜。</h3>
       <p class="muted">毎月10日ごろに社員のご自宅（またはご家族）へお届けします。</p>
       <div id="scheduleStrip" class="schedule-strip"><span class="muted">読み込み中…</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 費用シミュレーター -->
+<section class="section" id="simulator">
+  <div class="wrap">
+    <div class="section__head">
+      <p class="eyebrow">費用シミュレーター</p>
+      <h2>御社なら、いくら？</h2>
+      <p class="muted">社員数をスライドするだけ。月額・年間の費用がその場でわかります。</p>
+    </div>
+    <div class="sim card card--pad-lg">
+      <div class="sim__control">
+        <label class="sim__count-label" for="simRange">社員数　<output id="simCount" for="simRange" class="sim__count">10</output><span class="sim__count-unit">名</span></label>
+        <input type="range" id="simRange" min="1" max="100" value="10" step="1" aria-label="社員数" />
+        <div class="sim__scale"><span>1名</span><span>50名</span><span>100名</span></div>
+      </div>
+      <div class="sim__result">
+        <div class="sim__hero">
+          <span class="sim__label">月額費用（税込）</span>
+          <span class="sim__value" id="simMonthly">¥110,000</span>
+        </div>
+        <dl class="sim__rows">
+          <div><dt>月額（税別）</dt><dd id="simMonthlyEx">¥100,000</dd></div>
+          <div><dt>年間（税込）</dt><dd id="simAnnual">¥1,320,000</dd></div>
+          <div><dt>1人あたり</dt><dd>¥10,000／月（税別）</dd></div>
+        </dl>
+        <p class="hint">導入費用・利用促進サポート・商品費用・配送料をすべて含みます。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- よくある質問 -->
+<section class="section section--tint" id="faq">
+  <div class="wrap narrow-lg">
+    <div class="section__head">
+      <p class="eyebrow">よくある質問</p>
+      <h2>気になること、お答えします。</h2>
+    </div>
+    <div class="faq">
+      <details>
+        <summary>社員の家族の住所に届けてもらえますか？<span class="faq__icon"></span></summary>
+        <p>はい。お届け先は社員ご本人のご自宅のほか、ご実家などご家族の住所も登録できます。社員ポータルからいつでも変更可能です。</p>
+      </details>
+      <details>
+        <summary>月の途中で入社・退社した場合はどうなりますか？<span class="faq__icon"></span></summary>
+        <p>社員を登録した月から配送スケジュールが自動で組まれます。退社時は管理コンソールから停止・削除でき、停止中の社員は費用計算から自動で除外されます。</p>
+      </details>
+      <details>
+        <summary>お米や野菜の内容は選べますか？<span class="faq__icon"></span></summary>
+        <p>偶数月はお米5kg、奇数月はその季節の旬の野菜セットをお届けします。ゆくゆくはオムツなど子育て世代向け商品も選べるよう準備中です。</p>
+      </details>
+      <details>
+        <summary>費用には何が含まれますか？<span class="faq__icon"></span></summary>
+        <p>1人あたり月額1万円（税別）に、導入費用・従業員様への利用促進サポート・お米／野菜の商品費用・配送料がすべて含まれます。追加費用はありません。</p>
+      </details>
+      <details>
+        <summary>導入までどのくらいかかりますか？<span class="faq__icon"></span></summary>
+        <p>会社IDの発行は数分で完了します。社員の登録が済み次第、翌月分からお届けを開始できます。</p>
+      </details>
     </div>
   </div>
 </section>

@@ -25,8 +25,9 @@
   --radius-sm: 10px;
   --shadow: 0 10px 30px -12px rgba(43, 58, 74, 0.28);
   --shadow-sm: 0 4px 14px -8px rgba(43, 58, 74, 0.35);
-  --font: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic", "Noto Sans JP",
+  --font: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic",
     "Meiryo", system-ui, -apple-system, sans-serif;
+  --font-display: "Zen Maru Gothic", var(--font); /* 見出し用（丸ゴシック＝ゴリのブランドに合わせる） */
 }
 
 * { box-sizing: border-box; }
@@ -42,7 +43,9 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-h1, h2, h3, h4 { line-height: 1.35; margin: 0 0 0.5em; font-weight: 800; }
+h1, h2, h3, h4 { line-height: 1.35; margin: 0 0 0.5em; font-weight: 800; font-family: var(--font-display); }
+
+:focus-visible { outline: 3px solid var(--blue-light); outline-offset: 2px; border-radius: 4px; }
 p { margin: 0 0 1em; }
 a { color: var(--blue); text-decoration: none; }
 a:hover { text-decoration: underline; }
@@ -210,3 +213,11 @@ tbody tr:hover { background: var(--cream); }
 .footer__links a { color: #cdd7e0; font-weight: 700; font-size: 14px; }
 .footer__links a:hover { color: #fff; }
 .footer__copy { font-size: 13px; width: 100%; border-top: 1px solid rgba(255,255,255,.08); padding-top: 16px; }
+
+/* ---------- スクロール表示アニメーション ---------- */
+.reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.55s ease, transform 0.55s ease; }
+.reveal.is-in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .hero__gori, .hero__chip, .hero__blob, .float-slow { animation: none !important; }
+}

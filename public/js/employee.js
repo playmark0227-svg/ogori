@@ -74,17 +74,35 @@ function showPortal(data) {
   $('#empCompany').textContent = data.company.name;
   $('#empCode').textContent = data.employee.employeeCode;
 
-  // 今月のお届け
+  // 今月のお届け（＋次回の予告）
   const p = data.thisMonth.product;
   const isRice = p.type === 'rice';
+  const icon = (type) => (type === 'rice' ? '../assets/rice.png' : '../assets/vegetable.svg');
+
+  // 配送リストから「今月」と「次回」を特定する。
+  const now = new Date();
+  const idx = data.deliveries.findIndex(
+    (d) => d.year === now.getFullYear() && d.month === now.getMonth() + 1
+  );
+  const current = idx >= 0 ? data.deliveries[idx] : null;
+  const next = idx >= 0 ? data.deliveries[idx + 1] : data.deliveries[0];
+
   $('#thisMonthCard').innerHTML = `
-    <div style="display:flex;align-items:center;gap:20px">
-      <div style="font-size:56px">${isRice ? '🍚' : '🥬'}</div>
-      <div>
-        <div class="muted" style="font-weight:700;font-size:13px">今月（${data.thisMonth.month}月）のお届け</div>
-        <div style="font-size:26px;font-weight:900">${escapeHtml(p.name)}</div>
-        <div class="muted">${isRice ? '偶数月はお米をお届けします。' : '奇数月は旬の野菜をお届けします。'}</div>
+    <div class="delivery-hero__inner">
+      <div class="delivery-hero__main">
+        <img class="delivery-hero__img" src="${icon(p.type)}" alt="" />
+        <div>
+          <div class="delivery-hero__label">今月（${data.thisMonth.month}月）のお届け</div>
+          <div class="delivery-hero__name">${escapeHtml(p.name)}</div>
+          <div class="muted" style="font-size:13.5px">${current ? `お届け予定日: ${escapeHtml(current.scheduledDate)} ごろ` : (isRice ? '偶数月はお米をお届けします。' : '奇数月は旬の野菜をお届けします。')}</div>
+        </div>
       </div>
+      ${next ? `
+      <div class="delivery-hero__next">
+        <span class="delivery-hero__next-label">次回のお届け</span>
+        <img src="${icon(next.productType)}" alt="" />
+        <span>${next.month}月・${escapeHtml(next.productName)}</span>
+      </div>` : ''}
     </div>`;
 
   // 住所フォーム
