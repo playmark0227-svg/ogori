@@ -251,18 +251,37 @@
 
 /* レスポンシブ */
 @media (max-width: 880px) {
+  .section { padding: 52px 0; }
   .sim { grid-template-columns: 1fr; gap: 24px; }
-  .hero__inner { grid-template-columns: 1fr; }
-  .hero__art { min-height: 320px; order: -1; }
+  .hero { padding: 40px 0 104px; }
+  .hero__inner { grid-template-columns: 1fr; gap: 28px; }
+  .hero__art { min-height: 300px; order: -1; }
+  .hero__blob { width: 290px; height: 290px; }
   .problem-grid { grid-template-columns: repeat(2, 1fr); }
-  .solution { grid-template-columns: 1fr; }
+  .problem-gori img { width: 76px; }
+  .problem-gori p { font-size: 17px; }
+  .solution { grid-template-columns: 1fr; gap: 28px; }
   .solution__art { order: -1; }
   .steps { grid-template-columns: 1fr; }
   .effect-grid { grid-template-columns: 1fr; }
   .voice-grid { grid-template-columns: 1fr; }
-  .plan { grid-template-columns: 1fr; }
-  .cta-final__inner { flex-direction: column; text-align: center; padding: 32px; }
+  .plan { grid-template-columns: 1fr; gap: 28px; }
+  .cta-final__inner { flex-direction: column; text-align: center; padding: 32px 22px; }
 }
 @media (max-width: 480px) {
   .problem-grid { grid-template-columns: 1fr; }
+  .hero__cta { flex-direction: column; }
+  .hero__cta .btn { width: 100%; }
+  .hero__trust { gap: 16px 22px; }
+  .hero__gori { width: min(240px, 68%); }
+  .hero__chip { font-size: 12px; padding: 6px 11px 6px 6px; }
+  .hero__chip img { width: 24px; height: 24px; }
+  .spark { font-size: 15px; }
+  .price__num { font-size: 48px; }
+  .sim__count { font-size: 36px; }
+  .sim__value { font-size: 36px; }
+  .marquee__track span { font-size: 13px; }
+  .marquee__track { gap: 34px; }
+  .totop { width: 42px; height: 42px; right: 14px; bottom: 14px; }
+  .voice blockquote { font-size: 14px; }
 }

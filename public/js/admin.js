@@ -259,16 +259,16 @@ function renderEmployees() {
             .map(
               (e) => `
             <tr>
-              <td><strong>${escapeHtml(e.name)}</strong>${e.email ? `<br><span class="muted" style="font-size:12px">${escapeHtml(e.email)}</span>` : ''}</td>
-              <td class="mono">${escapeHtml(e.employeeCode)}</td>
-              <td>${escapeHtml(e.department || '—')}</td>
-              <td>${e.addressRegistered
+              <td data-label="氏名"><strong>${escapeHtml(e.name)}</strong>${e.email ? `<br><span class="muted" style="font-size:12px">${escapeHtml(e.email)}</span>` : ''}</td>
+              <td data-label="社員コード" class="mono">${escapeHtml(e.employeeCode)}</td>
+              <td data-label="部署">${escapeHtml(e.department || '—')}</td>
+              <td data-label="お届け先">${e.addressRegistered
                 ? '<span class="badge badge--delivered">登録済</span>'
                 : '<span class="badge badge--paused">未登録</span>'}</td>
-              <td>${e.status === 'active'
+              <td data-label="状態">${e.status === 'active'
                 ? '<span class="badge badge--active">稼働中</span>'
                 : '<span class="badge badge--paused">停止中</span>'}</td>
-              <td class="nowrap">
+              <td data-label="操作" class="nowrap">
                 <button class="btn btn--ghost btn--sm" data-act="edit" data-id="${e.id}">編集</button>
                 <button class="btn btn--ghost btn--sm" data-act="pin" data-id="${e.id}">PIN再発行</button>
                 <button class="btn btn--danger btn--sm" data-act="del" data-id="${e.id}" data-name="${escapeHtml(e.name)}">削除</button>
@@ -550,11 +550,11 @@ function renderDeliveries() {
             .map(
               (d) => `
             <tr>
-              <td class="nowrap"><strong>${escapeHtml(d.scheduledDate)}</strong></td>
-              <td>${escapeHtml(d.employeeName)}<br><span class="muted mono" style="font-size:12px">${escapeHtml(d.employeeCode)}</span></td>
-              <td>${productBadge(d.productType, d.productName)}</td>
-              <td>${statusBadge(d.status)}</td>
-              <td>
+              <td data-label="お届け予定日" class="nowrap"><strong>${escapeHtml(d.scheduledDate)}</strong></td>
+              <td data-label="社員">${escapeHtml(d.employeeName)}<br><span class="muted mono" style="font-size:12px">${escapeHtml(d.employeeCode)}</span></td>
+              <td data-label="商品">${productBadge(d.productType, d.productName)}</td>
+              <td data-label="状態">${statusBadge(d.status)}</td>
+              <td data-label="更新">
                 <select data-delivery="${d.id}" class="status-select" aria-label="${escapeHtml(d.employeeName)}の配送状態">
                   <option value="scheduled" ${d.status === 'scheduled' ? 'selected' : ''}>予定</option>
                   <option value="shipped" ${d.status === 'shipped' ? 'selected' : ''}>発送済</option>

@@ -266,6 +266,45 @@ tbody tr:hover { background: var(--cream-deep); }
 .modal { animation: modal-pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
 @keyframes modal-pop { from { opacity: 0; transform: translateY(16px) scale(0.95); } }
 
+/* ---------- モバイル: テーブルをカード型に変形（data-label 必須） ---------- */
+@media (max-width: 640px) {
+  .table-wrap { border: none; border-radius: 0; overflow: visible; }
+  .table-wrap table, .table-wrap tbody, .table-wrap tr, .table-wrap td { display: block; width: 100%; }
+  .table-wrap thead { display: none; }
+  .table-wrap tbody tr {
+    background: var(--white); border: 1px solid var(--line); border-radius: var(--radius-sm);
+    margin-bottom: 12px; padding: 4px 14px; box-shadow: var(--shadow-sm);
+  }
+  .table-wrap tbody tr:nth-child(even), .table-wrap tbody tr:hover { background: var(--white); }
+  .table-wrap td {
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    padding: 10px 0; border-bottom: 1px dashed var(--line); text-align: right;
+  }
+  .table-wrap td:last-child { border-bottom: none; }
+  .table-wrap td::before {
+    content: attr(data-label); margin-right: auto; text-align: left;
+    font-size: 12px; font-weight: 700; color: var(--ink-soft); flex-shrink: 0;
+  }
+  .table-wrap td.nowrap { white-space: normal; }
+}
+
+/* ---------- モバイル: アプリヘッダーの折返し ---------- */
+@media (max-width: 620px) {
+  .nav__inner { height: auto; flex-wrap: wrap; padding: 10px 0; row-gap: 8px; }
+  .nav__links { width: 100%; overflow-x: auto; padding-bottom: 3px; -webkit-overflow-scrolling: touch; }
+  .nav__links .btn { flex-shrink: 0; }
+}
+
+/* ---------- モバイル: フッター・カード余白 ---------- */
+@media (max-width: 640px) {
+  .footer__inner { flex-direction: column; align-items: flex-start; gap: 18px; }
+}
+@media (max-width: 480px) {
+  .card { padding: 18px; }
+  .card--pad-lg { padding: 22px 18px; }
+  .wrap { width: min(1120px, 94vw); }
+}
+
 /* ---------- 動きを減らす設定の尊重（全アニメーション一括） ---------- */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

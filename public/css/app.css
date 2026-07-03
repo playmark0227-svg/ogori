@@ -213,6 +213,28 @@ tbody tr:nth-child(8) { animation-delay: 0.31s; }
   .portal-grid { grid-template-columns: 1fr; }
   .toolbar__search { width: 100%; }
 }
+@media (max-width: 640px) {
+  .app-main { padding: 20px 0 48px; }
+  /* 月チップは横スワイプに */
+  .month-chips { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 6px; -webkit-overflow-scrolling: touch; }
+  .mchip { flex-shrink: 0; }
+  .section-card__head { flex-direction: column; align-items: stretch; }
+  .section-card__head .toolbar { justify-content: flex-start; }
+  .portal-head { flex-wrap: wrap; }
+  .portal-head img { width: 48px; }
+  .delivery-hero__img { width: 58px; height: 58px; }
+  .delivery-hero__name { font-size: 21px; }
+  .delivery-hero__inner { gap: 14px; }
+  .idbanner { padding: 16px 18px; }
+  .idbanner__id { font-size: 19px; }
+  .idbanner__gori { width: 52px; }
+  .launch-card__art { width: 76px; height: 76px; }
+  .launch-card__art img { width: 60px; }
+  .creds__row b { font-size: 15px; }
+  .guide__head h2 { font-size: 15.5px; }
+}
 @media (max-width: 480px) {
-  .stat-grid { grid-template-columns: 1fr; }
+  .stat-grid { grid-template-columns: 1fr; gap: 12px; }
+  .stat__value { font-size: 24px; }
+  .stat__value--hero { font-size: 25px; }
 }
