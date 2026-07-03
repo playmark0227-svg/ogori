@@ -149,12 +149,12 @@ function renderStats(s) {
   const cards = [
     {
       label: '稼働中の社員', tint: 'blue', icon: '👥',
-      value: `${s.activeEmployees}<span class="stat__unit">名</span>`,
+      value: `<span data-count="${s.activeEmployees}">${s.activeEmployees}</span><span class="stat__unit">名</span>`,
       sub: `登録総数 ${s.totalEmployees}名`,
     },
     {
       label: '今月の月額費用（税込）', tint: 'gold', icon: '💴', hero: true,
-      value: escapeHtml(yen(s.cost.monthlyInclTax)),
+      value: `<span data-count="${s.cost.monthlyInclTax}" data-yen="1">${escapeHtml(yen(s.cost.monthlyInclTax))}</span>`,
       sub: `税別 ${yen(s.cost.monthlyExclTax)}／年間 ${yen(s.cost.annualInclTax)}`,
     },
     {
@@ -183,6 +183,28 @@ function renderStats(s) {
     </div>`
     )
     .join('');
+  animateStatNumbers();
+}
+
+// 統計タイルの数値をカウントアップ表示する。
+const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function animateStatNumbers() {
+  if (REDUCED_MOTION) return;
+  $$('#statCards [data-count]').forEach((el) => {
+    const to = Number(el.dataset.count);
+    if (!Number.isFinite(to) || to <= 0) return;
+    const isYen = el.dataset.yen === '1';
+    const dur = 750;
+    const start = performance.now();
+    const step = (t) => {
+      const p = Math.min(1, (t - start) / dur);
+      const eased = 1 - Math.pow(1 - p, 3);
+      const v = Math.round(to * eased);
+      el.textContent = isYen ? yen(v) : String(v);
+      if (p < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  });
 }
 
 // ---------------------------------------------------------------------------

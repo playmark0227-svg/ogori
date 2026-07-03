@@ -38,7 +38,33 @@ if (toTop) {
   toTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 }
 
-// スクロール表示アニメーション（主要ブロックへ自動付与）。
+const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// 数値カウントアップ（[data-countup] を持つ要素が表示されたら 0→値 へ）。
+function runCountUps(root) {
+  root.querySelectorAll('[data-countup]:not(.is-counted)').forEach((el) => {
+    el.classList.add('is-counted');
+    const to = parseFloat(el.dataset.countup);
+    const decimals = Number(el.dataset.decimals || 0);
+    const comma = el.dataset.format === 'comma';
+    const fmt = (v) => (comma ? Math.round(v).toLocaleString('ja-JP') : v.toFixed(decimals));
+    if (REDUCED || !Number.isFinite(to)) {
+      el.textContent = fmt(to);
+      return;
+    }
+    const dur = 900;
+    const start = performance.now();
+    const step = (t) => {
+      const p = Math.min(1, (t - start) / dur);
+      const eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = fmt(to * eased);
+      if (p < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  });
+}
+
+// スクロール表示アニメーション（要素の種類ごとに方向を変える）。
 const revealTargets = $$(
   '.section__head, .problem, .problem-gori, .solution__copy, .solution__art, .step, .effect, .voice, .plan__price, .plan__schedule, .sim, .faq details, .cta-final__inner'
 );
@@ -48,6 +74,7 @@ if ('IntersectionObserver' in window) {
       for (const e of entries) {
         if (e.isIntersecting) {
           e.target.classList.add('is-in');
+          runCountUps(e.target);
           io.unobserve(e.target);
         }
       }
@@ -56,9 +83,14 @@ if ('IntersectionObserver' in window) {
   );
   revealTargets.forEach((t, i) => {
     t.classList.add('reveal');
+    if (t.matches('.solution__art, .plan__price')) t.classList.add('reveal--left');
+    else if (t.matches('.solution__copy, .plan__schedule')) t.classList.add('reveal--right');
+    else if (t.matches('.effect, .voice, .sim')) t.classList.add('reveal--zoom');
     t.style.transitionDelay = `${Math.min(i % 4, 3) * 60}ms`;
     io.observe(t);
   });
+} else {
+  runCountUps(document);
 }
 
 // 料金情報（配送スケジュール＋シミュレーター共通のデータソース）。
@@ -89,6 +121,31 @@ let pricing = { monthlyPerEmployee: 10000, taxRate: 0.1 };
 
 // ---- 費用シミュレーター ----
 const simRange = $('#simRange');
+let simShown = 0; // 現在表示中の月額（ヒーロー数値をなめらかに変化させる）
+let simTweenId = 0;
+
+// ヒーロー数値をカウントアップ/ダウンで目標値へ。
+function tweenMonthly(to) {
+  const el = $('#simMonthly');
+  if (REDUCED) {
+    simShown = to;
+    el.textContent = yen(to);
+    return;
+  }
+  const from = simShown;
+  const id = ++simTweenId;
+  const dur = 260;
+  const start = performance.now();
+  const step = (t) => {
+    if (id !== simTweenId) return; // 新しい操作が来たら中断
+    const p = Math.min(1, (t - start) / dur);
+    const eased = 1 - Math.pow(1 - p, 2);
+    simShown = from + (to - from) * eased;
+    el.textContent = yen(Math.round(simShown));
+    if (p < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
 
 function updateSim() {
   if (!simRange) return;
@@ -96,7 +153,7 @@ function updateSim() {
   const monthlyEx = pricing.monthlyPerEmployee * n;
   const monthlyIn = Math.round(monthlyEx * (1 + pricing.taxRate));
   $('#simCount').textContent = n;
-  $('#simMonthly').textContent = yen(monthlyIn);
+  tweenMonthly(monthlyIn);
   $('#simMonthlyEx').textContent = yen(monthlyEx);
   $('#simAnnual').textContent = yen(monthlyIn * 12);
   // スライダーの進捗をトラック色に反映

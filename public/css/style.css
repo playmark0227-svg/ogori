@@ -236,10 +236,43 @@ tbody tr:hover { background: var(--cream-deep); }
 .footer__links a:hover { color: #fff; }
 .footer__copy { font-size: 13px; width: 100%; border-top: 1px solid rgba(255,255,255,.08); padding-top: 16px; }
 
-/* ---------- スクロール表示アニメーション ---------- */
-.reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.55s ease, transform 0.55s ease; }
+/* ---------- 共有キーフレーム ---------- */
+@keyframes fade-up { from { opacity: 0; transform: translateY(16px); } }
+@keyframes pop-in { from { opacity: 0; transform: scale(0.8); } }
+@keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+@keyframes wiggle { 25% { transform: rotate(-7deg); } 75% { transform: rotate(7deg); } }
+@keyframes fade-in { from { opacity: 0; } }
+
+/* ---------- スクロール表示アニメーション（方向バリエーション付き） ---------- */
+.reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.55s ease, transform 0.55s cubic-bezier(0.22, 0.9, 0.35, 1); }
+.reveal--left { transform: translateX(-30px); }
+.reveal--right { transform: translateX(30px); }
+.reveal--zoom { transform: scale(0.92) translateY(8px); }
 .reveal.is-in { opacity: 1; transform: none; }
+
+/* ---------- マイクロインタラクション ---------- */
+.btn { position: relative; overflow: hidden; }
+.btn:active { transform: translateY(0) scale(0.96); }
+.btn--gold::after, .btn--primary::after {
+  content: ""; position: absolute; top: 0; bottom: 0; left: -80%; width: 45%;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+  transform: skewX(-20deg); transition: left 0.45s ease; pointer-events: none;
+}
+.btn--gold:hover::after, .btn--primary:hover::after { left: 125%; }
+.brand:hover .brand__logo { animation: wiggle 0.5s ease; }
+
+/* ---------- モーダルの登場 ---------- */
+.modal-backdrop { animation: fade-in 0.2s ease; }
+.modal { animation: modal-pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+@keyframes modal-pop { from { opacity: 0; transform: translateY(16px) scale(0.95); } }
+
+/* ---------- 動きを減らす設定の尊重（全アニメーション一括） ---------- */
 @media (prefers-reduced-motion: reduce) {
-  .reveal { opacity: 1; transform: none; transition: none; }
-  .hero__gori, .hero__chip, .hero__blob, .float-slow { animation: none !important; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  html { scroll-behavior: auto; }
+  .reveal { opacity: 1; transform: none; }
 }
