@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>社員ポータル ｜ オゴリ (OGORI)</title>
+<link rel="icon" href="../assets/gori-salute.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@700;900&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../css/style.css" />
+<link rel="stylesheet" href="../css/app.css" />
+</head>
+<body>
+<div id="nav"></div>
+
+<main class="wrap app-main">
+  <!-- 未ログイン -->
+  <section id="authView" class="hidden">
+    <div class="auth">
+      <div class="auth__art">
+        <img src="../assets/gori-hero.png" alt="ゴリ" />
+        <h2>社員ポータル</h2>
+        <p class="muted">お届け先の登録・配送スケジュールの確認ができます。</p>
+      </div>
+      <div class="card card--pad-lg auth__form narrow">
+        <h3>ログイン</h3>
+        <p class="muted" style="font-size:13.5px">会社から配布された情報でログインしてください。</p>
+        <form id="empLoginForm">
+          <div id="empLoginAlert"></div>
+          <div class="field"><label>会社ID</label><input name="companyId" required placeholder="OGORI-XXXXXX" style="text-transform:uppercase" /></div>
+          <div class="field"><label>社員コード</label><input name="employeeCode" required placeholder="EMP-XXXX" style="text-transform:uppercase" /></div>
+          <div class="field"><label>PIN</label><input name="pin" required inputmode="numeric" placeholder="会社から配布されたPIN" /></div>
+          <button class="btn btn--primary btn--block" type="submit">ログイン</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ログイン後 -->
+  <section id="portalView" class="hidden">
+    <div class="portal-head">
+      <img src="../assets/gori-salute.png" alt="ゴリ" />
+      <div style="flex:1">
+        <h2 style="margin:0"><span id="empName"></span> さん、こんにちは！</h2>
+        <div class="muted" style="font-size:13.5px"><span id="empCompany"></span>（<span id="empCode" class="mono"></span>）</div>
+      </div>
+      <button id="empLogoutBtn" class="btn btn--ghost btn--sm">ログアウト</button>
+    </div>
+
+    <!-- お知らせ（住所未登録など） -->
+    <div id="portalNotice"></div>
+
+    <!-- 今月のお届け -->
+    <div id="thisMonthCard" class="card section-card delivery-hero"></div>
+
+    <div class="portal-grid" id="portalGrid">
+      <!-- お届け先住所 -->
+      <div class="card section-card">
+        <div class="section-card__head"><h2>お届け先住所</h2><span id="addrStatus"></span></div>
+        <form id="addrForm" class="stack">
+          <div id="addrAlert"></div>
+          <div class="field"><label>郵便番号 *</label><input name="postalCode" maxlength="16" placeholder="150-0001" required /></div>
+          <div class="field"><label>住所 *</label><input name="address" maxlength="300" placeholder="東京都渋谷区…" required /></div>
+          <button class="btn btn--primary" type="submit">お届け先を保存</button>
+          <p class="hint">ご家族のご住所でも登録いただけます。</p>
+        </form>
+      </div>
+
+      <!-- 配送スケジュール -->
+      <div class="card section-card">
+        <div class="section-card__head"><h2>配送スケジュール</h2></div>
+        <div id="empTimeline"></div>
+      </div>
+    </div>
+
+    <div class="card section-card">
+      <div class="section-card__head"><h2>PINの変更</h2></div>
+      <form id="pinForm" class="row" style="align-items:flex-end">
+        <div class="field" style="max-width:200px"><label>現在のPIN</label><input name="currentPin" required inputmode="numeric" /></div>
+        <div class="field" style="max-width:200px"><label>新しいPIN（4桁以上）</label><input name="newPin" required inputmode="numeric" /></div>
+        <div class="field" style="flex:0"><button class="btn btn--ghost" type="submit">変更する</button></div>
+      </form>
+    </div>
+  </section>
+</main>
+
+<script type="module" src="../js/employee.js"></script>
+</body>
+</html>

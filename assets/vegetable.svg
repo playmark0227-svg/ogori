@@ -1,0 +1,21 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="旬の野菜">
+  <!-- 手描き風・青いアウトライン × 野菜グリーン。オゴリのブランドに合わせた旬の野菜セット -->
+  <g stroke="#37527a" stroke-width="6" stroke-linejoin="round" stroke-linecap="round">
+    <!-- 葉物（小松菜/青梗菜）左 -->
+    <path d="M104 210 C86 200 72 172 76 140 C80 108 98 84 112 78 C118 108 118 150 116 186 C115 198 112 206 104 210 Z" fill="#8cbf63"/>
+    <path d="M112 78 C110 120 112 168 112 200" stroke="#5f9540" stroke-width="5" fill="none"/>
+    <!-- 葉物 右 -->
+    <path d="M150 212 C170 202 186 172 182 138 C178 106 158 82 144 78 C138 112 138 156 140 190 C141 202 144 208 150 212 Z" fill="#7bb356"/>
+    <path d="M144 78 C147 122 146 170 146 202" stroke="#5f9540" stroke-width="5" fill="none"/>
+    <!-- 中央の大きな葉 -->
+    <path d="M128 214 C112 200 108 160 116 120 C122 92 128 74 128 62 C130 74 136 96 140 124 C146 164 142 200 128 214 Z" fill="#9bcf70"/>
+    <path d="M128 66 C128 118 128 170 128 206" stroke="#5f9540" stroke-width="5" fill="none"/>
+    <!-- ニンジン（差し色） -->
+    <path d="M186 150 C210 156 222 178 214 200 C208 216 184 220 168 208 C154 198 150 176 160 162 C168 152 178 148 186 150 Z" fill="#e08a3c"/>
+    <path d="M186 150 C192 138 200 132 210 132" stroke="#5f9540" stroke-width="6" fill="none"/>
+    <path d="M180 150 C182 136 188 128 198 124" stroke="#5f9540" stroke-width="6" fill="none"/>
+    <path d="M175 176 L182 172 M185 190 L192 186 M172 192 L178 189" stroke="#b9862a" stroke-width="4"/>
+    <!-- 束ねる帯 -->
+    <path d="M96 196 C118 208 150 208 172 196 L172 214 C150 226 118 226 96 214 Z" fill="#dca63f"/>
+  </g>
+</svg>
